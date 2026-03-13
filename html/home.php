@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Home - Mini App</title>
     
-    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=1.4">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=1.4">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=2.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=2.0">
 </head>
 
 <body>
     <video id="v0" preload="auto" muted playsinline webkit-playsinline autoplay loop 
-       style="position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover;">
-    <source src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/camper-scroll.mp4" type="video/mp4">
-</video>
+           style="position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover;">
+        <source src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/camper-scroll.mp4" type="video/mp4">
+    </video>
 
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
@@ -66,28 +64,29 @@
         </nav>
 
         <div id="product-sheet" class="bottom-sheet">
-    <div class="sheet-overlay" onclick="closeSheet()"></div>
-    <div class="sheet-content">
-        <div id="sheet-body"></div>
+            <div class="sheet-overlay" onclick="closeSheet()"></div>
+            <div class="sheet-content">
+                <div id="sheet-body"></div>
+            </div>
+        </div>
     </div>
-</div>
 
-
-    
-    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/database.js?v=1.1"></script>
-<script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/sheet.js?v=1.1"></script>
-<script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/scripts.js?v=1.1"></script>
-
+    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/database.js?v=2.0"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/sheet.js?v=2.0"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/scripts.js?v=2.0"></script>
 
     <script>
-        // Opzionale: Visualizza il nome dell'utente Telegram
         document.addEventListener('DOMContentLoaded', () => {
             const tg = window.Telegram.WebApp;
+            tg.expand(); // Espande la mini app al massimo
             const user = tg.initDataUnsafe?.user;
-            if (user) {
-                document.getElementById('user-name').innerText = user.first_name;
-            } else {
-                document.getElementById('user-name').innerText = "Ospite";
+            document.getElementById('user-name').innerText = user ? user.first_name : "Ospite";
+            
+            // Avvia la funzione che crea la griglia (che sta in scripts.js)
+            if (typeof inizializzaCatalogo === 'function') {
+                inizializzaCatalogo();
             }
         });
     </script>
+</body>
+</html>
