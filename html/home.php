@@ -10,13 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=2.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=2.0">
 
-    <style>
-  .product-banner-img {
-    min-height: 200px !important;
-    background-color: red !important; /* SE VEDI UN RETTANGOLO ROSSO, L'IMMAGINE C'È MA È ROTTA */
-    display: block !important;
-  }
-</style>
 </head>
 
 <body>
