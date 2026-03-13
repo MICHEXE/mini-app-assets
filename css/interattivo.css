@@ -1,0 +1,318 @@
+:root {
+    --filter-color-signal: invert(72%) sepia(50%) saturate(542%) hue-rotate(175deg) brightness(101%) contrast(101%);
+    
+}
+
+/* ============================================================
+   ANIMAZIONI DI ENTRATA (BANNER E CARD)
+   ============================================================ */
+video::-webkit-media-controls {
+    display: none !important;
+}
+
+.banner-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none; 
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out !important;
+}
+
+.banner-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important; 
+}
+
+/* ============================================================
+   HOME: FEEDBACK CARD PRODOTTI
+   ============================================================ */
+.product-card {
+    transition: all 0.2s ease;
+}
+
+.product-card:active {
+    transform: scale(0.96); /* Effetto clic rapido sulla card */
+}
+
+/* ============================================================
+   INFO: ANIMAZIONE SHURIKEN E BOTTONE CHAT
+   ============================================================ */
+@keyframes shuriken-movimento {
+    0% { transform: rotateY(0deg); }
+    5% { transform: rotateY(90deg); }
+    10% { transform: rotateY(180deg); }
+    15% { transform: rotateY(270deg); }
+    20% { transform: rotateY(360deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+.btn-chat-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    background-color: #2ecc71 !important; 
+    color: white !important;
+    text-decoration: none !important;
+    padding: 12px 0;
+    margin-top: 15px; 
+    border-radius: 8px; 
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-chat-banner:hover {
+    background-color: #27ae60 !important; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(46, 204, 113, 0.3); 
+}
+
+.btn-chat-banner:active {
+    transform: translateY(0);
+}
+
+/* ============================================================
+   CONTATTI: EFFETTI HOVER SUI BANNER SOCIAL
+   ============================================================ */
+#banner-contatti-2 .icon-condividi {
+    transition: all 0.4s ease-in-out !important;
+}
+
+#banner-contatti-2:hover .icon-phone-bg { 
+    background-color: #1a1a1a !important; 
+    box-shadow: none !important; 
+    border: none !important; 
+}
+
+#banner-contatti-2:hover .icon-condividi {
+    filter: var(--filter-color-signal) !important;
+    transform: translateX(10px) rotate(90deg) !important;
+}
+
+#banner-contatti-2:hover .banner-titolo {
+    color: var(--color-text-signal) !important;
+}
+
+
+
+/******************************************************************************
+|                                                                             |
+|                                   SHEET                                     |
+|                                                                             |
+*******************************************************************************/
+
+
+
+
+/* ============================================================
+   STRUTTURA E OVERLAY (CONTENITORE PADRE)
+   ============================================================ */
+.bottom-sheet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; 
+    z-index: 2000;
+}
+
+.sheet-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bottom-sheet.active .sheet-overlay {
+    opacity: 1;
+}
+
+/* ============================================================
+   SCHEDA CONTENUTI (ANIMAZIONE E LAYOUT)
+   ============================================================ */
+.sheet-content {
+    height: 85vh !important; 
+    width: 100% !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(100%); 
+    transition: opacity 0.5s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    overflow-y: auto !important; 
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    background: var(--main-color-bg-banner) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 2px solid var(--color-border);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0); 
+    padding: 0 !important;
+}
+
+.bottom-sheet.active .sheet-content {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* ============================================================
+   CORPO DELLA SCHEDA E COMPONENTI VISIVI
+   ============================================================ */
+#sheet-body {
+    flex: 1;
+    padding: 0 !important; 
+    padding-bottom: 120px; 
+    color: white;
+    text-align: center;
+}
+
+#sheet-body img {
+    width: 100% !important; 
+    max-width: none !important;
+    height: 300px; 
+    object-fit: cover;
+    margin: 0 !important; 
+    display: block;
+    margin-bottom: 25px !important; 
+}
+
+.sheet-info-content {
+    padding: 0 25px;
+    text-align: left;
+}
+
+.sheet-title {
+    color: var(--main-text-color)!important;
+    font-family: var(--font-titoli)!important;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+/* ============================================================
+   BADGE, METADATI E DESCRIZIONE
+   ============================================================ */
+.sheet-meta-data {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.location-badge, .info-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.location-badge {
+    background-color: var(--color-bg-banner-dark)!important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--secondary-text-color)!important;
+}
+
+.info-badge {
+    background-color: var(--color-bg-banner-ciano)!important;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    color: var(--text-color-blue)!important;
+}
+
+.sheet-desc-container {
+    position: relative;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 18px;
+    padding-left: 55px;
+    border-radius: 15px;
+    border: none;
+    color: var(--secondary-text-color)!important;
+    font-family: var(--font-contenuto)!important;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.desc-icon {
+    position: absolute;
+    top: 18px;
+    left: 15px;
+    width: 24px;
+    height: 24px;
+    filter : var(--filter-white) !important;
+    opacity: 0.8;
+}
+
+/* ============================================================
+   AZIONI E PULSANTI (ORDINE E CHIUSURA)
+   ============================================================ */
+.sheet-handle {
+    width: 40px;
+    height: 5px;
+    background: #9d2c2c;
+    border-radius: 10px;
+    margin: 0 auto 15px;
+}
+
+.sheet-order-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.order-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.order-btn.signal {
+    background: #3a76f0;
+    box-shadow: 0 4px 0 #2a56b0;
+    margin-bottom: 5px;
+}
+
+.order-btn.telegram {
+    background: #24A1DE;
+    box-shadow: 0 4px 0 #1a78a6;
+}
+
+.order-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 transparent;
+}
+
+.close-sheet-btn {
+    width: 100%;
+    padding: 12px;
+    background: #8c0707;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+}

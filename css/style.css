@@ -1,0 +1,488 @@
+/******************************************************************************
+|                                                                             |
+|                                   GLOBAL                                    |
+|                                                                             |
+*******************************************************************************/
+a, a:visited, a:hover, a:active {
+    text-decoration: none !important;
+    color: inherit;
+    outline: none !important;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+     /* font settings*/
+    --font-titoli: 'Courier New', Courier, monospace;
+    --size-titoli: 18px;
+    --font-contenuto: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --size-contenuto: 14px;
+
+     /* COLORI FONT*/
+    --main-text-color: #000000;
+    --secondary-text-color: #ffffffa8;
+    --text-color-blue: #00ffffa2; /* sheet*/
+    --text-color-signal: #74a874;
+
+    /* COLORI GLOBALI BANNER */
+    --main-color-bg-banner: #7a8c7a84;
+    --color-bg-banner-dark: #000000; /*  sheet*/
+    --color-bg-banner-ciano: #2b4c4c; /* sheet*/
+    --color-bg-bottom-menu: #3b3f3b;
+    --color-glow:   rgba(122, 140, 122, 0.4); 
+    --color-border: rgba(122, 140, 122, 0.2);/* anche per product card */
+
+   /* Filtri svg */
+    --filter-white: brightness(0) invert(1); 
+    --filter-none: none;
+    --bg-transparent: rgba(0, 0, 0, 0); /* Trasparenza totale */
+   
+
+    
+}
+
+[id*="banner-"] {
+    position: relative !important;
+    width: calc(100% - 10px); 
+    margin: 15px auto;
+    background-color: var(--main-color-bg-banner) !important;
+    border: 1px solid var(--bb-green-border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 10px var(--bb-green-glow);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    overflow: hidden;
+}
+
+[id*="banner-"] .banner-titolo, [id*="banner-"] .banner-titolo * {
+    font-family: var(--font-titoli) !important;
+    color: var(--main-text-color) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-size: var(--size-titoli) !important;
+}
+[id*="banner-"] .banner-contenuto, [id*="banner-"] .banner-contenuto * {
+    font-family: var(--font-contenuto) !important;
+    color: var(--secondary-text-color) !important;
+    font-size: var(--size-contenuto) !important;
+}
+
+
+/* RESET E TRASPARENZA */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    /* Rimuoviamo l'immagine: ora il background deve essere trasparente per vedere il video sotto */
+    background: transparent !important;
+    overflow-x: hidden;
+}
+
+body.no-scroll {
+    overflow: hidden !important;
+    height: 100vh !important;
+    position: fixed; /* Forza il blocco su iOS */
+    width: 100%;
+}
+
+#app {
+    display: block;
+    min-height: 100vh;
+    /* I tuoi 200px di spazio sopra per l'effetto cielo */
+    padding: 125px 20px 120px 20px; 
+    overflow-x: hidden;
+    background: transparent !important;
+    position: relative;
+    z-index: 1; /* Sopra al video */
+
+    
+}
+
+/* Rimuovi la maschera da #app.home-page e usa questo: */
+
+/* Rimuovi la maschera da #app.home-page e usa questo: */
+
+/* IL VIDEO BACKGROUND (FIXED) */
+#v0 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;    /* Forza la larghezza al 100% della visuale */
+    height: 100vh;   /* Forza l'altezza al 100% della visuale */
+    z-index: -1;     /* Sempre dietro */
+    
+    /* IL TRUCCO MAGICO */
+    object-fit: cover;     /* Riempie lo schermo ritagliando i bordi in eccesso */
+    object-position: center; /* Tiene il camper al centro del ritaglio */
+    pointer-events: none;
+}
+
+/******************************************************************************
+|                                   BOTTOM MENU                               |
+*******************************************************************************/
+
+#bottom-menu {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around; 
+    align-items: center;
+   
+    background: var(--color-bg-bottom-menu) !important;
+    height: 70px !important; /* Altezza triplicata per dare respiro */
+    padding-bottom: 20px !important; 
+    border-top: 1px solid rgba(0, 0, 0, 0.05); 
+    z-index: 999;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.menu-link {
+    text-decoration: none !important;
+    display: flex !important;
+    flex-direction: column !important; /* Mette l'icona SOPRA il testo */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important; /* Spazio verticale tra icona e parola */
+    flex: 1;
+}
+
+/* ICONA SVG PICCOLA E NERA */
+.menu-svg {
+    margin-top: 15px !important;
+    width: 18px !important; /* Dimensione ridotta come richiesto */
+    height: 18px !important;
+    object-fit: contain;
+    filter: brightness(0) !important; /* Forza il nero */
+    transition: all 0.3s ease;
+}
+
+/* TESTO SPAN NERO */
+.menu-link span {
+    font-family: "Bahnschrift", sans-serif;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000000 !important;
+    transition: all 0.3s ease;
+}
+
+/* --- STATO ATTIVO: ORO --- */
+.menu-link.active .menu-svg {
+    /* Trasforma il nero in ORO #d4af37 */
+    filter: invert(72%) sepia(54%) saturate(464%) hue-rotate(9deg) brightness(92%) contrast(87%) !important;
+}
+
+.menu-link.active span {
+    color: #d4af37 !important;
+}
+
+
+/******************************************************************************
+|                                                                             |
+|                                   HOME                                      |
+|                                                                             |
+*******************************************************************************/
+
+#banner-home-1, #banner-home-2 {
+    max-width: 90% !important; 
+    min-height: auto !important;
+    padding: 15px !important;
+    margin: 10px auto !important; /* Allinea entrambi i banner */
+}
+
+#banner-home-1 .banner-titolo, 
+#banner-home-2 .banner-titolo {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important; 
+    align-items: center !important;
+    text-transform: capitalize !important; 
+    font-weight: 600 !important;
+}
+
+#banner-home-1 .banner-contenuto {
+    display: flex !important;
+    padding-left: 55px !important; 
+    margin-top: -15px !important;  /* Valore negativo: più è alto il numero, più sale */
+
+}
+
+.titolo-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important; /* Spazio tra l'icona del filtro e la parola Prodotti */
+}
+
+.icon-filtro {
+    width: 20px !important;
+    height: 20px !important;
+    filter: invert(1) !important; 
+}
+
+
+.header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important; /* Spazio tra manina e scritta */
+    
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+.banner-icone {
+    display: flex !important;
+    gap: 10px;
+}
+
+.icon-ciao {
+    width: 45px !important;
+    height: 45px !important;
+    padding: 5px !important;
+    background-color: #0000007c !important; /* Rosso come il titolo */
+    border-radius: 8px !important;
+    filter: none !important;
+
+    /* AGGIUNGI QUESTA RIGA */
+    transform: translateY(15px) !important; /* Prova con 5px, 8px o 10px */
+    
+}
+
+#user-name {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+}
+
+/* Questo comando colpisce SOLO lo shuriken nella Home */
+#banner-home-1 .icon-shuriken {
+    position: relative !important;
+    top: 10px !important; 
+    right: 0 !important;
+    width: 30px !important;
+
+    /* --- FILTRO PER COLORE CELESTE --- */
+    filter: invert(72%) sepia(50%) saturate(542%) hue-rotate(175deg) brightness(101%) contrast(101%) !important;
+}
+
+/******************************************************************************
+|                          GRID & PRODUCT CARDS (FIXED)                       |
+*******************************************************************************/
+
+/******************************************************************************
+|           PRODUCT CARDS - RITORNO ALLO STILE ORIGINALE (GLASS)              |
+*******************************************************************************/
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
+}
+
+/******************************************************************************
+|           PRODUCT CARDS - STILE ORIGINALE + ACCELERAZIONE HARDWARE          |
+*******************************************************************************/
+
+.product-card {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    
+    /* STILE GRAFICO ORIGINALE */
+    background-color: var(--main-color-bg-banner) !important;
+    border: 1px solid var(--bb-green-border);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 10px var(--bb-green-glow);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+
+    /* OTTIMIZZAZIONE PERFORMANCE (ADDIO SCATTI) */
+    will-change: transform, opacity;
+    transform: translateZ(0); 
+    backface-visibility: hidden;
+    contain: paint; 
+    
+    /* Transizione per l'effetto comparsa a cascata */
+    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+}
+
+.product-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Riempie il quadrato con la tua foto 1920x1080 */
+    
+    filter: none !important; /* Rimuove i vecchi filtri SVG */
+    
+    /* OTTIMIZZAZIONE VISIVA */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000;
+    transition: transform 0.4s ease;
+}
+
+/* Effetto zoom al tocco più fluido */
+.product-card:active .product-banner-img {
+    transform: scale(1.08);
+}
+
+
+
+/******************************************************************************
+|                                                                             |
+|                                RECENSIONI                                   |
+|                                                                             |
+*******************************************************************************/
+
+#banner-recensioni-1 {
+    align-items: center !important; 
+    text-align: center !important;
+    min-height: 130px !important;
+}
+
+#banner-recensioni-1 .banner-titolo {
+    display: flex !important;
+    justify-content: center !important; /* Centra orizzontalmente */
+    align-items: center !important;     /* Centra verticalmente testo e shuriken */
+}
+
+#banner-recensioni-1 .banner-contenuto {
+    
+    padding-left: 0px !important;
+    margin-top: 15px !important; 
+}
+
+/******************************************************************************
+|                                                                             |
+|                                    INFO                                     |
+|                                                                             |
+*******************************************************************************/
+
+#banner-info-1 {
+    min-height: 90px !important;
+    background-color: #2c2c2e !important; 
+    border: none !important;
+    align-items: center !important; /* Questo è il vero "centratore" */
+}
+
+
+[id*="banner-info-"] .banner-titolo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#banner-info-2 .banner-contenuto, 
+#banner-info-3 .banner-contenuto,
+#banner-info-4 .banner-contenuto {
+    padding-left: 50px !important;
+}
+
+.icon-wrapper {
+    width: 35px;
+    height: 35px;
+    background: var(--bg-transparent) !important;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter:  var(--svg-glow-white) !important;
+    flex-shrink: 0; /* Impedisce all'icona di schiacciarsi */
+}
+
+
+.icon-img {
+    width: 20px;
+    height: 20px;
+    filter : var(--filter-white) !important;
+}
+ 
+/******************************************************************************
+|                                  CONTATTI                                   |
+*******************************************************************************/
+
+#banner-contatti-1, #banner-contatti-3 {
+    align-items: center !important; 
+    text-align: center !important;
+    min-height: 130px !important;
+}
+
+#banner-contatti-1 .banner-titolo, 
+#banner-contatti-3 .banner-titolo {
+    justify-content: center !important;
+    padding-left: 0 !important;
+}
+
+#banner-contatti-2 {
+    width: 45% !important; 
+    min-height: 130px !important;
+    margin-left: 5px !important;
+    margin-right: auto !important;
+    align-items: flex-start !important;
+}
+
+#banner-contatti-2 .banner-titolo {
+    flex-direction: column !important; 
+    align-items: flex-start !important;
+    text-transform: capitalize !important;
+}
+
+.icon-shuriken {
+    width: 22px !important;
+    height: 22px !important;
+    margin-left: 10px !important;
+    filter: invert(72%) sepia(50%) saturate(542%) hue-rotate(175deg) brightness(101%) contrast(101%) !important;
+    animation: shuriken-movimento 6s ease-in-out infinite;
+}
+
+.icon-phone {
+    display: block !important;
+    width: 48px !important;
+    height: 48px !important;
+    padding: 10px !important;
+    
+    background-color: #00000073 !important; 
+    border-radius: 10px !important;
+    
+    filter: brightness(10) !important; 
+    
+    margin-bottom: 12px !important;
+    object-fit: contain !important;
+    flex-shrink: 0;
+}
+
+.icon-condividi {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 25px !important;
+    height: 25px !important;
+    
+
+    filter: brightness(0) invert(1) !important; 
+    
+    opacity: 0.8;
+    z-index: 10;
+    transition: all 0.4s ease-in-out !important;
+}
+
