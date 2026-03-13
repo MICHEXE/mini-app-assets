@@ -17,7 +17,7 @@ const catalogoProdotti = [
         luogo: "ROMA, IT", 
         info: "EDIZIONE LIMITATA", 
         img: "https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/prodotto2.jpg", 
-        desc: "Descrizione completa del prodotto..." 
+        desc: "Descrizione completa del prodotto..."
     },
 
     { 
