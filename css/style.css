@@ -286,35 +286,46 @@ body.no-scroll {
 |           PRODUCT CARDS - RITORNO ALLO STILE ORIGINALE (GLASS)              |
 *******************************************************************************/
 
+/******************************************************************************
+|           PRODUCT CARDS - FIX DEFINITIVO                                     |
+*******************************************************************************/
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     padding: 15px;
+    position: relative;
+    z-index: 2; /* Assicura che sia sopra il video */
 }
-
-/******************************************************************************
-|           PRODUCT CARDS - STILE ORIGINALE + ACCELERAZIONE HARDWARE          |
-*******************************************************************************/
 
 .product-card {
     position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* FORZA la card a essere quadrata, fondamentale! */
+    background: rgba(255, 255, 255, 0.05); /* Sfondo leggerissimo, non nero coprente */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    background: #1a1a1a !important; /* Grigio scurissimo, no trasparenze per ora */
-    backdrop-filter: none !important; /* Togli il blur per vedere se spuntano le foto */
-    -webkit-backdrop-filter: none !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-banner-img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
+    object-fit: cover !important; /* Riempie la card senza deformarsi */
+    display: block !important;
     opacity: 1 !important;
-    visibility: visible !important;
+    position: absolute; /* Si posiziona perfettamente dentro la card */
+    top: 0;
+    left: 0;
 }
-/* Effetto zoom al tocco più fluido */
+
+/* L'effetto al tocco */
 .product-card:active .product-banner-img {
-    transform: scale(1.08);
+    transform: scale(1.1) !important;
 }
 
 
