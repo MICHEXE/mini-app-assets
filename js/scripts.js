@@ -36,10 +36,7 @@ const inizializzaCatalogo = () => {
             card.className = 'product-card banner-hidden';
             
             // Inseriamo SOLO l'immagine del banner
-            card.innerHTML = `
-    <img src="${p.img}" alt="${p.nome}" class="product-banner-img">
-    <div class="banner-overlay-glass"></div>
-`;
+            card.innerHTML = `<img src="${p.img}" alt="${p.nome}" class="product-banner-img">`;
             
             card.addEventListener('click', () => openSheet(p));
             grid.appendChild(card);

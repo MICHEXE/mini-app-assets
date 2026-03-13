@@ -302,32 +302,22 @@ body.no-scroll {
     aspect-ratio: 1 / 1;
     border-radius: 20px;
     overflow: hidden;
-    
-    /* MODIFICA: Togliamo il flex e il background solido che copre */
-    display: block; /* Importante per le immagini full-size */
-    background-color: transparent !important; 
-    
+    background-color: #1a1a1a !important; /* Un grigio scuro di fondo se la foto tarda */
     border: 1px solid var(--bb-green-border);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 10px var(--bb-green-glow);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     
-    /* Ottimizzazioni */
-    will-change: transform, opacity;
-    transform: translateZ(0); 
-    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    display: block; /* Fondamentale */
+    padding: 0 !important;
 }
 
 .product-banner-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block; /* Evita spazi bianchi sotto l'immagine */
-    
-    /* Assicuriamoci che l'immagine sia sopra lo sfondo ma sotto l'overlay */
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+    display: block;
+    transition: transform 0.4s ease;
 }
+
 /* Effetto zoom al tocco più fluido */
 .product-card:active .product-banner-img {
     transform: scale(1.08);
