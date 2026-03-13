@@ -88,6 +88,40 @@
                 inizializzaCatalogo();
             }
         });
+
+const inizializzaCatalogo = () => {
+    const grid = document.getElementById('grid-prodotti');
+    if (!grid || typeof catalogoProdotti === 'undefined') return;
+    
+    grid.innerHTML = ""; 
+
+    catalogoProdotti.forEach((p, index) => {
+        const card = document.createElement('div');
+        // Usiamo solo product-card, togliamo momentaneamente banner-hidden per test
+        card.className = 'product-card'; 
+        
+        card.innerHTML = `
+            <img src="${p.img}" 
+                 alt="${p.nome}" 
+                 class="product-banner-img" 
+                 onload="this.style.opacity='1'" 
+                 style="opacity:0; transition: opacity 0.5s;">
+        `;
+        
+        card.addEventListener('click', () => openSheet(p));
+        grid.appendChild(card);
+
+        // Effetto comparsa fluida della card
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+};
+
+// Avviala al caricamento della pagina
+document.addEventListener('DOMContentLoaded', inizializzaCatalogo);
+
     </script>
 </body>
 </html>
