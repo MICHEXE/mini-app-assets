@@ -26,26 +26,44 @@ const syncVideoConScroll = () => {
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
-    if (!grid) return;
+    if (!grid || typeof catalogoProdotti === 'undefined') return;
+    
     grid.innerHTML = ""; 
 
-    if (typeof catalogoProdotti !== 'undefined') {
-        catalogoProdotti.forEach((p, index) => {
-            const card = document.createElement('div');
-            // Usiamo la classe product-card che ora gestirà il banner
-            card.className = 'product-card banner-hidden';
-            
-            // Inseriamo SOLO l'immagine del banner
-            card.innerHTML = `<img src="${p.img}" alt="${p.nome}" class="product-banner-img">`;
-            
-            card.addEventListener('click', () => openSheet(p));
-            grid.appendChild(card);
+    catalogoProdotti.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        // Placeholder iniziale per evitare il punto di domanda
+        card.style.backgroundColor = "#222"; 
 
+        // 1. Creiamo l'oggetto immagine in memoria
+        const imgOggetto = new Image();
+        
+        // 2. Definiamo cosa fare quando l'immagine è pronta
+        imgOggetto.onload = () => {
+            imgOggetto.className = "product-banner-img";
+            card.appendChild(imgOggetto);
+            // Animazione di comparsa
             setTimeout(() => {
-                card.classList.add('banner-visible');
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
             }, index * 100);
+        };
+
+        // 3. Gestione errore
+        imgOggetto.onerror = () => {
+            card.innerHTML = `<div style="color:white; font-size:10px; padding:20px;">IMG Error</div>`;
+        };
+
+        // 4. Facciamo partire il download (aggiungiamo un timestamp per la cache)
+        imgOggetto.src = p.img + "?v=" + new Date().getTime();
+        
+        card.addEventListener('click', () => {
+            if(typeof openSheet === 'function') openSheet(p);
         });
-    }
+        
+        grid.appendChild(card);
+    });
 };
 
 /******************************************************************************
