@@ -21,7 +21,32 @@ const syncVideoConScroll = () => {
     }
 };
 
+/******************************************************************************
+| C. GENERAZIONE CATALOGO (CON EFFETTO A CASCATA)                             |
+*******************************************************************************/
+const inizializzaCatalogo = () => {
+    const grid = document.getElementById('grid-prodotti');
+    if (!grid) return;
+    grid.innerHTML = ""; 
 
+    if (typeof catalogoProdotti !== 'undefined') {
+        catalogoProdotti.forEach((p, index) => {
+            const card = document.createElement('div');
+            // Usiamo la classe product-card che ora gestirà il banner
+            card.className = 'product-card banner-hidden';
+            
+            // Inseriamo SOLO l'immagine del banner
+            card.innerHTML = `<img src="${p.img}" alt="${p.nome}" class="product-banner-img">`;
+            
+            card.addEventListener('click', () => openSheet(p));
+            grid.appendChild(card);
+
+            setTimeout(() => {
+                card.classList.add('banner-visible');
+            }, index * 100);
+        });
+    }
+};
 
 /******************************************************************************
 | D. AVVIO E EVENT LISTENERS                                                  |
