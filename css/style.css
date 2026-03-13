@@ -299,24 +299,18 @@ body.no-scroll {
 
 .product-card {
     position: relative;
-    aspect-ratio: 1 / 1;
-    border-radius: 20px;
     overflow: hidden;
-    background-color: #1a1a1a !important; /* Un grigio scuro di fondo se la foto tarda */
-    border: 1px solid var(--bb-green-border);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    
-    display: block; /* Fondamentale */
-    padding: 0 !important;
+    background: #1a1a1a !important; /* Grigio scurissimo, no trasparenze per ora */
+    backdrop-filter: none !important; /* Togli il blur per vedere se spuntano le foto */
+    -webkit-backdrop-filter: none !important;
 }
 
 .product-banner-img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    display: block !important;
-    opacity: 1 !important; /* Forza la visibilità */
-    background-color: #222; /* Colore di emergenza */
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 /* Effetto zoom al tocco più fluido */
 .product-card:active .product-banner-img {
