@@ -16,11 +16,18 @@ const appContainer = document.getElementById('app');
 const applicaSfondoDinamico = () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
     
-    // Controlla se esiste l'elemento e se nel database.js hai definito impostazioniApp
-    if (bgContainer && typeof impostazioniApp !== 'undefined' && impostazioniApp.sfondoLink) {
+    // Se non trova il database, aspetta 100ms e riprova
+    if (typeof impostazioniApp === 'undefined') {
+        setTimeout(applicaSfondoDinamico, 100);
+        return;
+    }
+
+    if (bgContainer && impostazioniApp.sfondoLink) {
+        console.log("Sfondo caricato con successo:", impostazioniApp.sfondoLink);
         bgContainer.style.backgroundImage = `url('${impostazioniApp.sfondoLink}')`;
-    } else {
-        console.log("Sfondo non trovato nel database o elemento mancante");
+        // Forza la visibilità nel caso il CSS avesse problemi
+        bgContainer.style.opacity = "1";
+        bgContainer.style.display = "block";
     }
 };
 
