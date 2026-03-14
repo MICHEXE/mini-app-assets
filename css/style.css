@@ -78,19 +78,7 @@ a, a:visited, a:hover, a:active {
 }
 
 
-/* RESET E TRASPARENZA */
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    /* TEST SFONDO ELASTICO */
-    background-image: url("https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets@main/img/sfondo.jpg") !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-attachment: fixed !important;
-    background-repeat: no-repeat !important;
-}
+
 
 body.no-scroll {
     overflow: hidden !important;
@@ -99,18 +87,7 @@ body.no-scroll {
     width: 100%;
 }
 
-#app {
-    display: block;
-    min-height: 100vh;
-    /* I tuoi 200px di spazio sopra per l'effetto cielo */
-    padding: 125px 20px 120px 20px; 
-    overflow-x: hidden;
-    background: transparent !important;
-    position: relative;
-    z-index: 1; /* Sopra al video */
 
-    
-}
 
 /* Rimuovi la maschera da #app.home-page e usa questo: */
 
