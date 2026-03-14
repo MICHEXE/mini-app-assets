@@ -1,115 +1,68 @@
 /******************************************************************************
-|                                                                             |
-|                                   GLOBAL                                    |
-|                                                                             |
+|                                   ROOT & GLOBAL                             |
 *******************************************************************************/
+:root {
+    /* Font settings */
+    --font-titoli: 'Courier New', Courier, monospace;
+    --size-titoli: 18px;
+    --font-contenuto: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --size-contenuto: 14px;
+
+    /* COLORI FONT */
+    --main-text-color: #000000;
+    --secondary-text-color: #ffffffa8;
+    --text-color-blue: #00ffffa2;
+    --text-color-signal: #74a874;
+
+    /* COLORI GLOBALI BANNER */
+    --main-color-bg-banner: #be3c2b84;
+    --color-bg-banner-dark: #000000;
+    --color-bg-banner-ciano: #2b4c4c;
+    --color-bg-bottom-menu: #3b3f3b;
+    --color-glow: rgba(122, 140, 122, 0.4); 
+    --color-border: rgba(122, 140, 122, 0.2);
+
+    /* Filtri svg */
+    --filter-white: brightness(0) invert(1); 
+    --filter-none: none;
+    --bg-transparent: rgba(0, 0, 0, 0);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
 a, a:visited, a:hover, a:active {
     text-decoration: none !important;
     color: inherit;
     outline: none !important;
 }
 
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-     /* font settings*/
-    --font-titoli: 'Courier New', Courier, monospace;
-    --size-titoli: 18px;
-    --font-contenuto: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --size-contenuto: 14px;
-
-     /* COLORI FONT*/
-    --main-text-color: #000000;
-    --secondary-text-color: #ffffffa8;
-    --text-color-blue: #00ffffa2; /* sheet*/
-    --text-color-signal: #74a874;
-
-    /* COLORI GLOBALI BANNER */
-    --main-color-bg-banner: #be3c2b84;
-    --color-bg-banner-dark: #000000; /*  sheet*/
-    --color-bg-banner-ciano: #2b4c4c; /* sheet*/
-    --color-bg-bottom-menu: #3b3f3b;
-    --color-glow:   rgba(122, 140, 122, 0.4); 
-    --color-border: rgba(122, 140, 122, 0.2);/* anche per product card */
-
-   /* Filtri svg */
-    --filter-white: brightness(0) invert(1); 
-    --filter-none: none;
-    --bg-transparent: rgba(0, 0, 0, 0); /* Trasparenza totale */
-   
-
-    
-}
-
-[id*="banner-"] {
-    position: relative !important;
-    width: calc(100% - 10px); 
-    margin: 15px auto;
-    background-color: var(--main-color-bg-banner) !important;
-    border: 1px solid var(--bb-green-border);
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 10px var(--bb-green-glow);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    overflow: hidden;
-}
-
-[id*="banner-"] .banner-titolo, [id*="banner-"] .banner-titolo * {
-    font-family: var(--font-titoli) !important;
-    color: var(--main-text-color) !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    font-size: var(--size-titoli) !important;
-}
-[id*="banner-"] .banner-contenuto, [id*="banner-"] .banner-contenuto * {
-    font-family: var(--font-contenuto) !important;
-    color: var(--secondary-text-color) !important;
-    font-size: var(--size-contenuto) !important;
-}
-
-
-
-
 /******************************************************************************
-|           RESET, TRASPARENZA E SFONDO DINAMICO (VERSIONE FIX)               |
-*******************************************************************************/
-/* RESET E BASE */
-/******************************************************************************
-|           RESET, TRASPARENZA E SFONDO DINAMICO (VERSIONE FIX)               |
+|                       STRUTTURA BASE & SFONDO (FIXED)                       |
 *******************************************************************************/
 html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100vh !important;
-    /* Rimuovi il transparent !important e metti un colore solido */
+    width: 100%;
+    height: 100%;
     background-color: #1a1a1a !important; 
     overflow-x: hidden;
     overflow-y: auto;
+    font-family: var(--font-contenuto);
 }
 
 #sfondo-dinamico {
     position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important; /* Forza l'altezza che nell'immagine era 0 */
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
     z-index: -1;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0; /* Sarà il JS a metterlo a 1 */
+    opacity: 0;
     transition: opacity 0.8s ease-in-out;
 }
 
@@ -117,14 +70,47 @@ html, body {
     position: relative;
     z-index: 1;
     width: 100%;
-    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     background: transparent !important;
-    padding-bottom: 80px; /* Spazio per il bottom menu */
+    padding-bottom: 100px; /* Spazio per menu */
 }
 
-/* STATI DI ANIMAZIONE PER I BANNER */
+/******************************************************************************
+|                            LOGICA BANNER GENERICA                           |
+*******************************************************************************/
+[id*="banner-"] {
+    position: relative !important;
+    width: 92%;
+    margin: 15px auto;
+    background-color: var(--main-color-bg-banner) !important;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    overflow: hidden;
+}
+
+[id*="banner-"] .banner-titolo {
+    font-family: var(--font-titoli) !important;
+    color: var(--main-text-color) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    font-size: var(--size-titoli) !important;
+}
+
+[id*="banner-"] .banner-contenuto {
+    font-family: var(--font-contenuto) !important;
+    color: var(--secondary-text-color) !important;
+    font-size: var(--size-contenuto) !important;
+}
+
 .banner-hidden {
     opacity: 0;
     transform: translateY(20px);
@@ -137,364 +123,126 @@ html, body {
 }
 
 /******************************************************************************
-|                                   BOTTOM MENU                               |
+|                            HOME SPECIFICA                                   |
 *******************************************************************************/
-
-#bottom-menu {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    display: flex;
-    justify-content: space-around; 
-    align-items: center;
-   
-    background: var(--color-bg-bottom-menu) !important;
-    height: 70px !important; /* Altezza triplicata per dare respiro */
-    padding-bottom: 20px !important; 
-    border-top: 1px solid rgba(0, 0, 0, 0.05); 
-    z-index: 999;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-}
-
-.menu-link {
-    text-decoration: none !important;
-    display: flex !important;
-    flex-direction: column !important; /* Mette l'icona SOPRA il testo */
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 5px !important; /* Spazio verticale tra icona e parola */
-    flex: 1;
-}
-
-/* ICONA SVG PICCOLA E NERA */
-.menu-svg {
-    margin-top: 15px !important;
-    width: 18px !important; /* Dimensione ridotta come richiesto */
-    height: 18px !important;
-    object-fit: contain;
-    filter: brightness(0) !important; /* Forza il nero */
-    transition: all 0.3s ease;
-}
-
-/* TESTO SPAN NERO */
-.menu-link span {
-    font-family: "Bahnschrift", sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #000000 !important;
-    transition: all 0.3s ease;
-}
-
-/* --- STATO ATTIVO: ORO --- */
-.menu-link.active .menu-svg {
-    /* Trasforma il nero in ORO #d4af37 */
-    filter: invert(72%) sepia(54%) saturate(464%) hue-rotate(9deg) brightness(92%) contrast(87%) !important;
-}
-
-.menu-link.active span {
-    color: #d4af37 !important;
-}
-
-
-/******************************************************************************
-|                                                                             |
-|                                   HOME                                      |
-|                                                                             |
-*******************************************************************************/
-
-#banner-home-1, #banner-home-2 {
-    max-width: 90% !important; 
-    min-height: auto !important;
-    padding: 15px !important;
-    margin: 10px auto !important; /* Allinea entrambi i banner */
-}
-
-#banner-home-1 .banner-titolo, 
-#banner-home-2 .banner-titolo {
+#banner-home-1 .banner-titolo, #banner-home-2 .banner-titolo {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: space-between !important; 
+    justify-content: space-between !important;
     align-items: center !important;
-    text-transform: capitalize !important; 
-    font-weight: 600 !important;
+    text-transform: capitalize !important;
 }
 
 #banner-home-1 .banner-contenuto {
     display: flex !important;
-    padding-left: 55px !important; 
-    margin-top: -15px !important;  /* Valore negativo: più è alto il numero, più sale */
-
+    padding-left: 55px !important;
+    margin-top: -15px !important;
 }
 
-.titolo-left {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important; /* Spazio tra l'icona del filtro e la parola Prodotti */
-}
-
-.icon-filtro {
-    width: 20px !important;
-    height: 20px !important;
-    filter: invert(1) !important; 
-}
-
-
-.header-left {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important; /* Spazio tra manina e scritta */
-    
-    font-weight: bold;
-    font-size: 14px;
-}
-
-
-.banner-icone {
-    display: flex !important;
-    gap: 10px;
-}
+#user-name { font-size: 24px !important; font-weight: 700 !important; }
 
 .icon-ciao {
-    width: 45px !important;
-    height: 45px !important;
-    padding: 5px !important;
-    background-color: #0000007c !important; /* Rosso come il titolo */
-    border-radius: 8px !important;
-    filter: none !important;
-
-    /* AGGIUNGI QUESTA RIGA */
-    transform: translateY(15px) !important; /* Prova con 5px, 8px o 10px */
-    
+    width: 45px; height: 45px; padding: 5px;
+    background-color: #0000007c;
+    border-radius: 8px;
+    transform: translateY(15px);
 }
 
-#user-name {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-}
-
-/* Questo comando colpisce SOLO lo shuriken nella Home */
 #banner-home-1 .icon-shuriken {
-    position: relative !important;
-    top: 10px !important; 
-    right: 0 !important;
-    width: 30px !important;
-
-    /* --- FILTRO PER COLORE CELESTE --- */
+    position: relative; top: 10px; width: 30px;
     filter: invert(72%) sepia(50%) saturate(542%) hue-rotate(175deg) brightness(101%) contrast(101%) !important;
 }
 
 /******************************************************************************
-|                          GRID & PRODUCT CARDS (FIXED)                       |
+|                         GRID & PRODOTTI (STABILE)                           |
 *******************************************************************************/
-
-/******************************************************************************
-|           PRODUCT CARDS - RITORNO ALLO STILE ORIGINALE (GLASS)              |
-*******************************************************************************/
-
-/******************************************************************************
-|           PRODUCT CARDS - FIX DEFINITIVO                                     |
-*******************************************************************************/
-/******************************************************************************
-|           GRID & PRODUCT CARDS - VERSIONE STABILE CASCATA                  |
-*******************************************************************************/
-
 .grid-container {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Forza 2 colonne fisse */
-    gap: 12px; /* Leggermente ridotto per schermi piccoli */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
     padding: 15px;
-    padding-bottom: 120px; /* Più spazio per non finire sotto il menu */
     width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
 }
 
 .product-card {
     position: relative;
     width: 100%;
-    /* 1. Blocchiamo la forma: evita che la griglia balli mentre carica */
-    aspect-ratio: 1 / 1 !important; 
-    
+    aspect-ratio: 1 / 1 !important;
     background: rgba(255, 255, 255, 0.08) !important;
-    border-radius: 18px; /* Angoli più morbidi e moderni */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    border: 1px solid var(--color-border);
     overflow: hidden;
-    
-    /* 2. Setup per l'animazione a cascata (gestita dal JS) */
-    opacity: 0; 
+    opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    
-    /* 3. Evita problemi di rendering */
-    will-change: transform, opacity;
-}
-
-/* Quando il JS aggiunge questa classe (o lo gestisce via style), la card appare */
-.product-card.banner-visible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .product-banner-img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; /* Taglia l'immagine per riempire il quadrato */
-    display: block !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    /* Evita il flash bianco dell'immagine che carica */
-    background-color: #2c2c2e; 
+    width: 100%; height: 100%; object-fit: cover !important;
+    position: absolute; top: 0; left: 0;
+    background-color: #2c2c2e;
 }
 
-/* Effetto feedback al tocco (molto importante su Telegram) */
-.product-card:active {
-    transform: scale(0.96) !important;
-    transition: transform 0.1s ease !important;
-}
-
+.product-card:active { transform: scale(0.96); }
 
 /******************************************************************************
-|                                                                             |
-|                                RECENSIONI                                   |
-|                                                                             |
+|                           RECENSIONI, INFO, CONTATTI                        |
 *******************************************************************************/
+/* Recensioni */
+#banner-recensioni-1 { align-items: center; text-align: center; }
+#banner-recensioni-1 .banner-titolo { justify-content: center; }
 
-#banner-recensioni-1 {
-    align-items: center !important; 
-    text-align: center !important;
-    min-height: 130px !important;
-}
-
-#banner-recensioni-1 .banner-titolo {
-    display: flex !important;
-    justify-content: center !important; /* Centra orizzontalmente */
-    align-items: center !important;     /* Centra verticalmente testo e shuriken */
-}
-
-#banner-recensioni-1 .banner-contenuto {
-    
-    padding-left: 0px !important;
-    margin-top: 15px !important; 
-}
-
-/******************************************************************************
-|                                                                             |
-|                                    INFO                                     |
-|                                                                             |
-*******************************************************************************/
-
-#banner-info-1 {
-    min-height: 90px !important;
-    background-color: #2c2c2e !important; 
-    border: none !important;
-    align-items: center !important; /* Questo è il vero "centratore" */
-}
-
-
-[id*="banner-info-"] .banner-titolo {
-    display: flex !important;
-    align-items: center !important;
-    gap: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-#banner-info-2 .banner-contenuto, 
-#banner-info-3 .banner-contenuto,
-#banner-info-4 .banner-contenuto {
-    padding-left: 50px !important;
-}
+/* Info */
+#banner-info-1 { background-color: #2c2c2e !important; border: none !important; align-items: center; }
+[id*="banner-info-"] .banner-titolo { display: flex; align-items: center; gap: 15px; }
 
 .icon-wrapper {
-    width: 35px;
-    height: 35px;
-    background: var(--bg-transparent) !important;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    filter:  var(--svg-glow-white) !important;
-    flex-shrink: 0; /* Impedisce all'icona di schiacciarsi */
+    width: 35px; height: 35px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
 }
 
+.icon-img { width: 20px; height: 20px; filter: var(--filter-white) !important; }
 
-.icon-img {
-    width: 20px;
-    height: 20px;
-    filter : var(--filter-white) !important;
-}
- 
-/******************************************************************************
-|                                  CONTATTI                                   |
-*******************************************************************************/
-
-#banner-contatti-1, #banner-contatti-3 {
-    align-items: center !important; 
-    text-align: center !important;
-    min-height: 130px !important;
-}
-
-#banner-contatti-1 .banner-titolo, 
-#banner-contatti-3 .banner-titolo {
-    justify-content: center !important;
-    padding-left: 0 !important;
-}
-
-#banner-contatti-2 {
-    width: 45% !important; 
-    min-height: 130px !important;
-    margin-left: 5px !important;
-    margin-right: auto !important;
-    align-items: flex-start !important;
-}
-
-#banner-contatti-2 .banner-titolo {
-    flex-direction: column !important; 
-    align-items: flex-start !important;
-    text-transform: capitalize !important;
-}
-
-.icon-shuriken {
-    width: 22px !important;
-    height: 22px !important;
-    margin-left: 10px !important;
-    filter: invert(72%) sepia(50%) saturate(542%) hue-rotate(175deg) brightness(101%) contrast(101%) !important;
-    animation: shuriken-movimento 6s ease-in-out infinite;
-}
+/* Contatti */
+#banner-contatti-2 { width: 45% !important; margin-left: 5px !important; align-items: flex-start; }
+#banner-contatti-2 .banner-titolo { flex-direction: column !important; align-items: flex-start; }
 
 .icon-phone {
-    display: block !important;
-    width: 48px !important;
-    height: 48px !important;
-    padding: 10px !important;
-    
-    background-color: #00000073 !important; 
-    border-radius: 10px !important;
-    
-    filter: brightness(10) !important; 
-    
-    margin-bottom: 12px !important;
-    object-fit: contain !important;
-    flex-shrink: 0;
+    width: 48px; height: 48px; padding: 10px;
+    background-color: #00000073; border-radius: 10px;
+    filter: brightness(10); margin-bottom: 12px;
 }
 
 .icon-condividi {
-    position: absolute !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 25px !important;
-    height: 25px !important;
-    
-
-    filter: brightness(0) invert(1) !important; 
-    
-    opacity: 0.8;
-    z-index: 10;
-    transition: all 0.4s ease-in-out !important;
+    position: absolute; top: 20px; right: 20px; width: 25px;
+    filter: var(--filter-white) !important; opacity: 0.8;
 }
 
+/******************************************************************************
+|                               BOTTOM MENU                                   |
+*******************************************************************************/
+#bottom-menu {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: var(--color-bg-bottom-menu) !important;
+    height: 75px; padding-bottom: 15px;
+    display: flex; justify-content: space-around; align-items: center;
+    z-index: 1000; border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.menu-link { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 5px; }
+
+.menu-svg {
+    width: 18px; height: 18px; filter: brightness(0) !important;
+    transition: all 0.3s ease;
+}
+
+.menu-link span {
+    font-family: "Bahnschrift", sans-serif; font-size: 9px;
+    font-weight: bold; color: #000000 !important;
+}
+
+.menu-link.active .menu-svg {
+    filter: invert(72%) sepia(54%) saturate(464%) hue-rotate(9deg) brightness(92%) contrast(87%) !important;
+}
+
+.menu-link.active span { color: #d4af37 !important; }

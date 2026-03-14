@@ -1,144 +1,169 @@
 /******************************************************************************
-| A. DEBUG E SICUREZZA                                                        |
+| A. CONFIGURAZIONE E UTILS                                                   |
 *******************************************************************************/
-window.onerror = function (msg, url, lineNo, columnNo, error) {
-    console.error("Errore: " + msg + " alla linea: " + lineNo);
+const AppConfig = {
+    version: typeof APP_VERSION !== 'undefined' ? APP_VERSION : Date.now(),
+    isReady: false
+};
+
+// Logger personalizzato per debug pulito
+const logger = {
+    error: (msg, err) => console.error(`[App Error] ${msg}`, err),
+    info: (msg) => console.log(`[App Info] ${msg}`)
+};
+
+window.onerror = (msg, url, line) => {
+    logger.error(`Errore alla linea ${line}: ${msg}`);
     return false;
 };
 
 /******************************************************************************
-| B. GESTIONE SFONDO - FORZATURA DIMENSIONI                                   |
+| B. GESTIONE SFONDO (ASINCRONA E OTTIMIZZATA)                                |
 *******************************************************************************/
-const applicaSfondoDinamico = () => {
+const applicaSfondoDinamico = async () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
+    if (!bgContainer || typeof impostazioniApp === 'undefined') return;
+
+    const urlFresco = `${impostazioniApp.sfondoLink}?v=${AppConfig.version}`;
     
-    if (typeof impostazioniApp === 'undefined' || !bgContainer) {
-        setTimeout(applicaSfondoDinamico, 50);
-        return;
-    }
-
-    // FORZA ALTEZZA DA JS (per sicurezza extra)
-    bgContainer.style.height = "100vh";
-    bgContainer.style.width = "100vw";
-
-    if (impostazioniApp.sfondoLink) {
-        const imgBuffer = new Image();
-        const v = typeof APP_VERSION !== 'undefined' ? APP_VERSION : new Date().getTime();
-        const urlFresco = impostazioniApp.sfondoLink + "?v=" + v;
+    try {
+        await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = urlFresco;
+            img.onload = resolve;
+            img.onerror = reject;
+        });
         
-        imgBuffer.onload = () => {
-            bgContainer.style.backgroundImage = `url('${urlFresco}')`;
-            bgContainer.style.opacity = "1"; 
-        };
-
-        imgBuffer.onerror = () => {
-            bgContainer.style.backgroundColor = "#1a1a1a";
-            bgContainer.style.opacity = "1";
-        };
-        imgBuffer.src = urlFresco;
+        bgContainer.style.backgroundImage = `url('${urlFresco}')`;
+        bgContainer.style.opacity = "1";
+    } catch (err) {
+        logger.error("Impossibile caricare lo sfondo, uso fallback.");
+        bgContainer.style.backgroundColor = "#1a1a1a";
+        bgContainer.style.opacity = "1";
     }
 };
 
 /******************************************************************************
-| C. GENERAZIONE CATALOGO                                                     |
+| C. GENERAZIONE CATALOGO (SMART RENDERING)                                   |
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
-    
-    // 1. Controllo sicurezza
     if (!grid || typeof catalogoProdotti === 'undefined') return;
-    
-    // 2. Pulizia griglia
+
+    // Usiamo un DocumentFragment per migliorare le performance di rendering
+    const fragment = document.createDocumentFragment();
     grid.innerHTML = ""; 
 
-    catalogoProdotti.forEach((p, index) => {
-        // Creiamo la card
+    catalogoProdotti.forEach((prodotto, index) => {
         const card = document.createElement('div');
-        card.className = 'product-card banner-hidden'; // Parte nascosta
+        card.className = 'product-card banner-hidden';
         
-        // Creiamo l'immagine
-        const imgOggetto = new Image();
-        const v = typeof APP_VERSION !== 'undefined' ? APP_VERSION : new Date().getTime();
-        
-        imgOggetto.onload = () => {
-            imgOggetto.className = "product-banner-img";
-            card.appendChild(imgOggetto);
-            
-            // Mostriamo la card con un delay progressivo (effetto cascata)
+        // Gestione immagine con lazy-loading logico
+        const img = new Image();
+        img.className = "product-banner-img";
+        img.src = `${prodotto.img}?v=${AppConfig.version}`;
+
+        img.onload = () => {
+            card.appendChild(img);
+            // Trigger animazione a cascata
             setTimeout(() => {
-                card.classList.add('banner-visible');
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, index * 100); 
+                card.classList.replace('banner-hidden', 'banner-visible');
+            }, index * 80); // 80ms è il "golden ratio" per la fluidità
         };
 
-        imgOggetto.onerror = () => {
-            console.error("Errore caricamento immagine per:", p.nome);
-            card.innerHTML = `<div style="color:#666; font-size:10px; padding:20px;">Non disponibile</div>`;
-            card.classList.add('banner-visible'); // La mostriamo comunque per non rompere la griglia
+        img.onerror = () => {
+            card.innerHTML = `<div style="color:#666; font-size:10px; display:flex; align-items:center; justify-content:center; height:100%;">N/A</div>`;
+            card.classList.replace('banner-hidden', 'banner-visible');
         };
 
-        // Assegniamo l'URL (questo avvia il download)
-        imgOggetto.src = p.img + "?v=" + v;
-        
-        // Click per aprire il foglio prodotto
         card.onclick = () => {
-            if (typeof openSheet === 'function') openSheet(p);
+            if (typeof openSheet === 'function') openSheet(prodotto);
         };
-        
-        grid.appendChild(card);
+
+        fragment.appendChild(card);
     });
+
+    grid.appendChild(fragment);
 };
 
 /******************************************************************************
-| D. AVVIO (FIXED: Forza visibilità immediata)                                |
+| D. GESTIONE BOTTOM SHEET (LOGICA APERTURA/CHIUSURA)                         |
 *******************************************************************************/
+const openSheet = (prodotto) => {
+    const sheet = document.getElementById('bottom-sheet');
+    const body = document.getElementById('sheet-body');
+    if (!sheet || !body) return;
+
+    // Popoliamo la sheet con i dati del prodotto
+    body.innerHTML = `
+        <img src="${prodotto.img}?v=${AppConfig.version}" alt="${prodotto.nome}">
+        <div class="sheet-info-content">
+            <h2 class="sheet-title">${prodotto.nome}</h2>
+            <div class="sheet-meta-data">
+                <span class="location-badge">Disponibile</span>
+                <span class="info-badge">${prodotto.prezzo || 'Contattaci'}</span>
+            </div>
+            <div class="sheet-desc-container">
+                <img src="path/to/desc-icon.svg" class="desc-icon">
+                ${prodotto.descrizione || 'Nessuna descrizione disponibile.'}
+            </div>
+        </div>
+    `;
+
+    sheet.style.display = 'block';
+    setTimeout(() => sheet.classList.add('active'), 10);
+};
+
+const closeSheet = () => {
+    const sheet = document.getElementById('bottom-sheet');
+    if (!sheet) return;
+    
+    sheet.classList.remove('active');
+    setTimeout(() => {
+        sheet.style.display = 'none';
+    }, 500); // Deve matchare la durata della transizione CSS
+};
+
+/******************************************************************************
+| E. NAVIGAZIONE E INIT                                                       |
+*******************************************************************************/
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(s => s.style.display = 'none');
+
+    const activeSection = document.getElementById(sectionId);
+    if (!activeSection) return;
+
+    activeSection.style.display = 'block';
+    
+    // Reset e ri-animazione banner interni
+    const banners = activeSection.querySelectorAll('[id*="banner-"]');
+    banners.forEach((b, i) => {
+        b.classList.remove('banner-visible');
+        b.classList.add('banner-hidden');
+        setTimeout(() => b.classList.add('banner-visible'), i * 100);
+    });
+
+    if (sectionId === 'prodotti') inizializzaCatalogo();
+}
+
 const initAppLogic = () => {
     const tg = window.Telegram.WebApp;
     tg.ready();
-    
-    // Mostriamo subito l'app per evitare il bianco
-    const app = document.getElementById('app');
-    if(app) app.style.opacity = "1";
+    tg.expand(); // Espande l'app per usare tutto lo schermo
+
+    const appContainer = document.getElementById('app');
+    if (appContainer) appContainer.style.opacity = "1";
 
     applicaSfondoDinamico();
-
-    // Riduciamo il ritardo per l'animazione banner
-    const staticBanners = document.querySelectorAll('.banner-hidden:not(.product-card)');
-    staticBanners.forEach((b, i) => {
-        setTimeout(() => {
-            b.classList.add('banner-visible');
-            // Debug: forziamo l'opacità se la classe fallisce
-            b.style.opacity = "1"; 
-        }, i * 100);
-    });
-
-    const checkData = setInterval(() => {
-        if (typeof catalogoProdotti !== 'undefined') {
-            inizializzaCatalogo();
-            clearInterval(checkData);
-        }
-    }, 100);
+    
+    // Gestione caricamento dati iniziale
+    if (typeof catalogoProdotti !== 'undefined') {
+        showSection('home'); // Mostra la home di default
+    } else {
+        logger.error("Dati catalogo non trovati al caricamento.");
+    }
 };
 
-if (document.readyState === "loading") {
-    document.addEventListener('DOMContentLoaded', initAppLogic);
-} else {
-    initAppLogic();
-}
-
-/******************************************************************************
-| E. NAVIGAZIONE SEZIONI                                                       |
-*******************************************************************************/
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-    const activeSection = document.getElementById(sectionId);
-    if (!activeSection) return;
-    activeSection.style.display = 'block';
-
-    const banners = activeSection.querySelectorAll('.banner-hidden');
-    banners.forEach((banner, index) => {
-        banner.classList.remove('banner-visible');
-        setTimeout(() => banner.classList.add('banner-visible'), index * 100); 
-    });
-}
+// Avvio pulito
+document.addEventListener('DOMContentLoaded', initAppLogic);
