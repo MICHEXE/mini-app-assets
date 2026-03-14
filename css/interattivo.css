@@ -6,9 +6,7 @@
 /* ============================================================
    ANIMAZIONI DI ENTRATA (BANNER E CARD)
    ============================================================ */
-video::-webkit-media-controls {
-    display: none !important;
-}
+
 
 .banner-hidden {
     opacity: 0;

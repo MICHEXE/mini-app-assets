@@ -13,9 +13,6 @@
 </head>
 
 <body>
-    <video id="v0" autoplay muted loop playsinline webkit-playsinline preload="auto">
-    <source src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/camper-scroll.mp4" type="video/mp4">
-</video>
 </video>
 
     <div id="app">

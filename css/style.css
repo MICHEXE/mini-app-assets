@@ -79,16 +79,22 @@ a, a:visited, a:hover, a:active {
 
 
 /* RESET E TRASPARENZA */
+/* ELIMINA IL VECCHIO html, body E METTI QUESTO */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100vh;
-    overflow: hidden !important; /* Blocca lo scroll del browser */
-    position: fixed;             /* Impedisce il trascinamento della barra */
-    background: #000;
+    overflow: hidden !important; 
+    position: fixed;             
+    
+    /* Configurazione Immagine Sfondo */
+    background-image: url("https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
 }
-
 
 
 body.no-scroll {
@@ -97,31 +103,20 @@ body.no-scroll {
 
 #app {
     display: block;
-    height: 100vh;               /* L'app occupa tutto lo schermo */
-    overflow-y: auto !important; /* Lo scroll avviene solo qui dentro */
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch; /* Scroll fluido su iPhone */
+    height: 100vh;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
     padding: 125px 20px 120px 20px;
     position: relative;
     z-index: 1;
+    background: transparent !important; /* Deve essere trasparente */
 }
 /* Rimuovi la maschera da #app.home-page e usa questo: */
 
 /* Rimuovi la maschera da #app.home-page e usa questo: */
 
 /* IL VIDEO BACKGROUND (FIXED) */
-#v0 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    object-fit: cover;
-    object-position: center;
-    /* FONDAMENTALE: impedisce al dito di toccare il video */
-    pointer-events: none; 
-}
+
 
 /******************************************************************************
 |                                   BOTTOM MENU                               |
