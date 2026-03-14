@@ -79,15 +79,21 @@ a, a:visited, a:hover, a:active {
 
 
 /* RESET E TRASPARENZA */
-body, html {
+html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height: 100vh;
-    /* Rimuoviamo l'immagine: ora il background deve essere trasparente per vedere il video sotto */
-    background: transparent !important;
+    /* Rimuoviamo min-height: 100vh e mettiamo questo per allungare la pagina */
+    min-height: 100%; 
+    height: auto !important; 
     overflow-x: hidden;
+    background: transparent !important;
+    /* Evita il rimbalzo bianco su iPhone e lo scatto del video */
+    overscroll-behavior-y: none; 
+    -webkit-overflow-scrolling: touch;
 }
+
+
 
 body.no-scroll {
     overflow: hidden !important;
@@ -98,15 +104,11 @@ body.no-scroll {
 
 #app {
     display: block;
-    min-height: 100vh;
-    /* I tuoi 200px di spazio sopra per l'effetto cielo */
-    padding: 125px 20px 120px 20px; 
-    overflow-x: hidden;
-    background: transparent !important;
+    /* Aumenta questo valore per rendere la pagina più lunga e scorrevole */
+    min-height: 180vh; 
+    padding: 125px 20px 150px 20px; 
     position: relative;
-    z-index: 1; /* Sopra al video */
-
-    
+    z-index: 1;
 }
 
 /* Rimuovi la maschera da #app.home-page e usa questo: */
@@ -118,14 +120,13 @@ body.no-scroll {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;    /* Forza la larghezza al 100% della visuale */
-    height: 100vh;   /* Forza l'altezza al 100% della visuale */
-    z-index: -1;     /* Sempre dietro */
-    
-    /* IL TRUCCO MAGICO */
-    object-fit: cover;     /* Riempie lo schermo ritagliando i bordi in eccesso */
-    object-position: center; /* Tiene il camper al centro del ritaglio */
-    pointer-events: none;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    object-fit: cover;
+    object-position: center;
+    /* FONDAMENTALE: impedisce al dito di toccare il video */
+    pointer-events: none; 
 }
 
 /******************************************************************************
@@ -295,8 +296,9 @@ body.no-scroll {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     padding: 15px;
+    padding-bottom: 100px; /* Spazio extra in fondo alla griglia */
     position: relative;
-    z-index: 2; /* Assicura che sia sopra il video */
+    z-index: 2;
 }
 
 .product-card {
