@@ -11,7 +11,7 @@
         // =============================================================
         // L'UNICA COSA DA CAMBIARE PER AGGIORNARE TUTTI GLI ASSET:
         // =============================================================
-        const APP_VERSION = "4.3"; 
+        const APP_VERSION = "4.4"; 
 
         function caricaAsset(tipo, url) {
             return new Promise((resolve, reject) => {
@@ -57,27 +57,10 @@
         inizializzaApp();
     </script>
 
-    <style>
-        /* STILE DI EMERGENZA INTEGRATO (Sempre pronto) */
-        .sfondo-fisso {
-            position: fixed !important;
-            top: 0; left: 0; 
-            width: 100vw; height: 100vh;
-            z-index: -1 !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            background-color: #1a1a1a !important; 
-            filter: brightness(0.5) contrast(1.1);
-            opacity: 0; 
-            transition: opacity 0.8s ease;
-            display: block !important;
-        }
-    </style>
 </head>
 
 <body>
-    <div id="sfondo-dinamico" class="sfondo-fisso"></div>
+    <div id="sfondo-dinamico"></div>
 
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
