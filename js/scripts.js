@@ -26,35 +26,43 @@ function precaricaImmagine(url) {
     });
 }
 
-const applicaSfondoDinamico = async () => {
+/******************************************************************************
+| B. GESTIONE SFONDO - TECNICA DOUBLE-BUFFER (FIX DEFINITIVO)                 |
+*******************************************************************************/
+
+const applicaSfondoDinamico = () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
     
-    // Attesa che il database sia caricato
     if (typeof impostazioniApp === 'undefined') {
         setTimeout(applicaSfondoDinamico, 100);
         return;
     }
 
     if (bgContainer && impostazioniApp.sfondoLink) {
-        try {
-            console.log("Inizio pre-caricamento sfondo...");
-            // SCACCO MATTO: Aspettiamo che il telefono scarichi davvero il file
-            const urlPronto = await precaricaImmagine(impostazioniApp.sfondoLink);
+        // Creiamo un elemento immagine "fantasma" per forzare il download
+        const imgBuffer = new Image();
+        const urlFresco = impostazioniApp.sfondoLink + "?t=" + new Date().getTime();
+        
+        imgBuffer.onload = () => {
+            // L'immagine è ora fisicamente nella RAM del telefono
+            console.log("Buffer pronto, applico lo sfondo.");
             
-            bgContainer.style.backgroundImage = `url('${urlPronto}')`;
+            // Applichiamo l'immagine e forziamo il CSS
+            bgContainer.style.backgroundImage = `url('${urlFresco}')`;
+            
+            // Rimuoviamo eventuali filtri che potrebbero scurire troppo (test)
             bgContainer.style.display = "block";
-            
-            // Appariamo gradualmente per un effetto premium
-            setTimeout(() => {
-                bgContainer.style.opacity = "1";
-            }, 50);
-            
-            console.log("Sfondo visualizzato con successo.");
-        } catch (error) {
-            console.error("Fallimento sfondo:", error);
-            // Se fallisce, almeno mettiamo un colore di sicurezza
-            bgContainer.style.backgroundColor = "#1a1a1a";
-        }
+            bgContainer.style.opacity = "1";
+            bgContainer.style.visibility = "visible";
+        };
+
+        imgBuffer.onerror = () => {
+            console.error("Errore critico: il link non risponde.");
+            // Se fallisce, mettiamo un colore di emergenza per non lasciare nero
+            bgContainer.style.backgroundColor = "#2c3e50"; 
+        };
+
+        imgBuffer.src = urlFresco;
     }
 };
 
