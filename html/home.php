@@ -56,6 +56,21 @@
     </script>
 
 </head>
+<style>
+    /* Fix immediato pre-caricamento */
+    #sfondo-dinamico { 
+        position: fixed; 
+        top:0; left:0; 
+        width:100vw; height:100vh; 
+        background-color: #1a1a1a; 
+        z-index: -1; 
+    }
+    #app { 
+        opacity: 0; 
+        position: relative; 
+        z-index: 1; 
+    }
+</style>
 
 <body>
     <div id="sfondo-dinamico"></div>
