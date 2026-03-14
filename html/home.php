@@ -7,7 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=2.4">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=2.5">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=2.4">
 
 </head>
