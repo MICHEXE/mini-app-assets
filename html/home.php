@@ -74,24 +74,35 @@
     
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tg = window.Telegram.WebApp;
-        tg.ready(); // Importante aggiungere ready()
-        tg.expand(); 
-        
-        const user = tg.initDataUnsafe?.user;
-        document.getElementById('user-name').innerText = user ? user.first_name : "Ospite";
-        
-        // 1. ATTIVA LO SFONDO DINAMICO (Prende il link dal database)
-        if (typeof applicaSfondoDinamico === 'function') {
-            applicaSfondoDinamico();
-        }
+document.addEventListener('DOMContentLoaded', () => {
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand(); 
 
-        // 2. AVVIA IL CATALOGO
-        if (typeof inizializzaCatalogo === 'function') {
-            inizializzaCatalogo();
+    // FORZA LO SFONDO DIRETTAMENTE QUI (Test rapido)
+    const forzaSfondo = () => {
+        const bg = document.getElementById('sfondo-dinamico');
+        // Usiamo un controllo per vedere se il database è arrivato
+        if (typeof impostazioniApp !== 'undefined' && impostazioniApp.sfondoLink) {
+            const urlfresco = impostazioniApp.sfondoLink + "?t=" + new Date().getTime();
+            bg.style.backgroundImage = "url('" + urlfresco + "')";
+            bg.style.opacity = "1";
+            console.log("Sfondo forzato dall'HTML!");
+        } else {
+            // Se il database non è ancora pronto, riprova tra poco
+            setTimeout(forzaSfondo, 100);
         }
-    });
+    };
+    
+    forzaSfondo();
+
+    const user = tg.initDataUnsafe?.user;
+    document.getElementById('user-name').innerText = user ? user.first_name : "Ospite";
+    
+    if (typeof inizializzaCatalogo === 'function') {
+        inizializzaCatalogo();
+    }
+});
 </script>
 </body>
 </html>
