@@ -7,8 +7,8 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=3.2">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=3.1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=3.3">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=3.3">
 
 </head>
 
@@ -86,9 +86,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/database.js?v=3.4"></script>
-    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/scripts.js?v=3.4"></script>
-    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/sheet.js?v=3.4"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/database.js?v=3.5"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/scripts.js?v=3.5"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/sheet.js?v=3.5"></script>
     
 
     <script>
