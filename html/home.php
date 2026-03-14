@@ -13,7 +13,9 @@
 </head>
 
 <body>
-<div id="sfondo-dinamico" class="sfondo-main"></div>
+<div id="sfondo-dinamico" class="sfondo-main" 
+     style="background-image: url('https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg?v=999'); opacity: 1 !important;">
+</div>
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
             <div class="banner-titolo">
