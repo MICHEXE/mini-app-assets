@@ -11,7 +11,7 @@
         // =============================================================
         // L'UNICA COSA DA CAMBIARE PER AGGIORNARE TUTTI GLI ASSET:
         // =============================================================
-        const APP_VERSION = "4.4"; 
+        const APP_VERSION = "4.5"; 
 
         function caricaAsset(tipo, url) {
             return new Promise((resolve, reject) => {
