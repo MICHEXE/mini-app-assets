@@ -6,19 +6,13 @@ const AppConfig = {
     isReady: false
 };
 
-// Logger personalizzato per debug pulito
 const logger = {
     error: (msg, err) => console.error(`[App Error] ${msg}`, err),
     info: (msg) => console.log(`[App Info] ${msg}`)
 };
 
-window.onerror = (msg, url, line) => {
-    logger.error(`Errore alla linea ${line}: ${msg}`);
-    return false;
-};
-
 /******************************************************************************
-| B. GESTIONE SFONDO (ASINCRONA E OTTIMIZZATA)                                |
+| B. GESTIONE SFONDO (CON FALLBACK GARANTITO)                                 |
 *******************************************************************************/
 const applicaSfondoDinamico = async () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
@@ -26,144 +20,156 @@ const applicaSfondoDinamico = async () => {
 
     const urlFresco = `${impostazioniApp.sfondoLink}?v=${AppConfig.version}`;
     
-    try {
-        await new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = urlFresco;
-            img.onload = resolve;
-            img.onerror = reject;
-        });
-        
+    const img = new Image();
+    img.src = urlFresco;
+    img.onload = () => {
         bgContainer.style.backgroundImage = `url('${urlFresco}')`;
         bgContainer.style.opacity = "1";
-    } catch (err) {
-        logger.error("Impossibile caricare lo sfondo, uso fallback.");
+    };
+    img.onerror = () => {
         bgContainer.style.backgroundColor = "#1a1a1a";
         bgContainer.style.opacity = "1";
-    }
+    };
 };
 
 /******************************************************************************
-| C. GENERAZIONE CATALOGO (SMART RENDERING)                                   |
+| C. GENERAZIONE CATALOGO (RENDERING IMMEDIATO)                               |
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
     if (!grid || typeof catalogoProdotti === 'undefined') return;
 
-    // Usiamo un DocumentFragment per migliorare le performance di rendering
     const fragment = document.createDocumentFragment();
     grid.innerHTML = ""; 
 
     catalogoProdotti.forEach((prodotto, index) => {
         const card = document.createElement('div');
+        // Usiamo banner-hidden per l'animazione, ma gestiamo l'interno subito
         card.className = 'product-card banner-hidden';
         
-        // Gestione immagine con lazy-loading logico
-        const img = new Image();
-        img.className = "product-banner-img";
-        img.src = `${prodotto.img}?v=${AppConfig.version}`;
+        card.innerHTML = `
+            <div class="img-loader-skeleton"></div>
+            <img src="${prodotto.img}?v=${AppConfig.version}" class="product-banner-img" style="opacity:0">
+            <div class="product-info-mini">
+                <span>${prodotto.nome}</span>
+            </div>
+        `;
 
+        const img = card.querySelector('.product-banner-img');
         img.onload = () => {
-            card.appendChild(img);
-            // Trigger animazione a cascata
-            setTimeout(() => {
-                card.classList.replace('banner-hidden', 'banner-visible');
-            }, index * 80); // 80ms è il "golden ratio" per la fluidità
+            img.style.opacity = "1";
+            card.querySelector('.img-loader-skeleton')?.remove();
         };
-
+        
         img.onerror = () => {
-            card.innerHTML = `<div style="color:#666; font-size:10px; display:flex; align-items:center; justify-content:center; height:100%;">N/A</div>`;
-            card.classList.replace('banner-hidden', 'banner-visible');
+            card.innerHTML = `<div class="error-placeholder">N/A</div>`;
         };
 
-        card.onclick = () => {
-            if (typeof openSheet === 'function') openSheet(prodotto);
-        };
-
+        card.onclick = () => openSheet(prodotto);
         fragment.appendChild(card);
+
+        // Animazione a cascata
+        setTimeout(() => {
+            card.classList.replace('banner-hidden', 'banner-visible');
+        }, index * 60);
     });
 
     grid.appendChild(fragment);
 };
 
 /******************************************************************************
-| D. GESTIONE BOTTOM SHEET (LOGICA APERTURA/CHIUSURA)                         |
+| D. GESTIONE BOTTOM SHEET (PRO VERSION)                                      |
 *******************************************************************************/
-const openSheet = (prodotto) => {
-    const sheet = document.getElementById('bottom-sheet');
+const openSheet = (p) => {
+    const sheet = document.getElementById('product-sheet'); // ID corretto come da tuo HTML
     const body = document.getElementById('sheet-body');
     if (!sheet || !body) return;
 
-    // Popoliamo la sheet con i dati del prodotto
     body.innerHTML = `
-        <img src="${prodotto.img}?v=${AppConfig.version}" alt="${prodotto.nome}">
+        <div class="sheet-handle-container"><div class="sheet-handle"></div></div>
+        <img src="${p.img}?v=${AppConfig.version}" class="sheet-img-main">
         <div class="sheet-info-content">
-            <h2 class="sheet-title">${prodotto.nome}</h2>
+            <h2 class="sheet-title">${p.nome}</h2>
             <div class="sheet-meta-data">
-                <span class="location-badge">Disponibile</span>
-                <span class="info-badge">${prodotto.prezzo || 'Contattaci'}</span>
+                <div class="location-badge"><span>${p.luogo || 'Italia'}</span></div>
+                <div class="info-badge"><span>${p.info || 'Disponibile'}</span></div>
             </div>
             <div class="sheet-desc-container">
-                <img src="path/to/desc-icon.svg" class="desc-icon">
-                ${prodotto.descrizione || 'Nessuna descrizione disponibile.'}
+                <p>${p.desc || 'Nessuna descrizione.'}</p>
+            </div>
+            <div class="sheet-order-actions">
+                <button class="order-btn signal" onclick="window.Telegram.WebApp.openLink('${LINK_SIGNAL}')">Signal</button>
+                <button class="order-btn telegram" onclick="window.Telegram.WebApp.openLink('${LINK_TELEGRAM}')">Telegram</button>
             </div>
         </div>
+        <button class="close-sheet-btn" onclick="closeSheet()">Chiudi</button>
     `;
 
     sheet.style.display = 'block';
     setTimeout(() => sheet.classList.add('active'), 10);
+    
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
 };
 
 const closeSheet = () => {
-    const sheet = document.getElementById('bottom-sheet');
+    const sheet = document.getElementById('product-sheet');
     if (!sheet) return;
-    
     sheet.classList.remove('active');
-    setTimeout(() => {
-        sheet.style.display = 'none';
-    }, 500); // Deve matchare la durata della transizione CSS
+    setTimeout(() => { sheet.style.display = 'none'; }, 500);
 };
 
 /******************************************************************************
-| E. NAVIGAZIONE E INIT                                                       |
+| E. NAVIGAZIONE E BOOTSTRAP                                                  |
 *******************************************************************************/
 function showSection(sectionId) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(s => s.style.display = 'none');
-
-    const activeSection = document.getElementById(sectionId);
-    if (!activeSection) return;
-
-    activeSection.style.display = 'block';
+    // Nascondi tutte le sezioni
+    document.querySelectorAll('section, .section').forEach(s => s.style.display = 'none');
     
-    // Reset e ri-animazione banner interni
-    const banners = activeSection.querySelectorAll('[id*="banner-"]');
+    // Mostra quella attiva
+    const activeSection = document.getElementById(sectionId) || document.getElementById(`sezione-${sectionId}`);
+    if (activeSection) {
+        activeSection.style.display = 'block';
+        
+        // Se è la sezione prodotti, assicurati che sia renderizzata
+        if (sectionId === 'prodotti' || sectionId === 'sezione-prodotti') {
+            inizializzaCatalogo();
+        }
+    }
+
+    // Animazione banner statici
+    const banners = document.querySelectorAll('.banner-hidden');
     banners.forEach((b, i) => {
-        b.classList.remove('banner-visible');
-        b.classList.add('banner-hidden');
         setTimeout(() => b.classList.add('banner-visible'), i * 100);
     });
-
-    if (sectionId === 'prodotti') inizializzaCatalogo();
 }
 
 const initAppLogic = () => {
     const tg = window.Telegram.WebApp;
     tg.ready();
-    tg.expand(); // Espande l'app per usare tutto lo schermo
+    tg.expand();
 
-    const appContainer = document.getElementById('app');
-    if (appContainer) appContainer.style.opacity = "1";
+    // Forza opacità app
+    const app = document.getElementById('app');
+    if (app) app.style.opacity = "1";
 
     applicaSfondoDinamico();
-    
-    // Gestione caricamento dati iniziale
+
+    // Avvio della sezione principale
     if (typeof catalogoProdotti !== 'undefined') {
-        showSection('home'); // Mostra la home di default
+        // Renderizziamo subito il catalogo così è pronto
+        inizializzaCatalogo();
+        // Mostriamo la home (che contiene i banner benvenuto)
+        showSection('home');
     } else {
-        logger.error("Dati catalogo non trovati al caricamento.");
+        logger.error("Dati non caricati.");
     }
 };
 
-// Avvio pulito
-document.addEventListener('DOMContentLoaded', initAppLogic);
+// Start
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAppLogic);
+} else {
+    initAppLogic();
+}
