@@ -1,37 +1,42 @@
 /******************************************************************************
-| A. DEBUG E INIZIALIZZAZIONE TELEGRAM                                         |
+| A. DEBUG E SICUREZZA                                                        |
 *******************************************************************************/
 window.onerror = function (msg, url, lineNo, columnNo, error) {
     if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.showAlert("Errore: " + msg + "\nLinea: " + lineNo);
+        // showAlert è utile in dev, ma puoi commentarlo in produzione
+        console.error("Errore: " + msg + " alla linea: " + lineNo);
     }
     return false;
 };
 
 /******************************************************************************
-| B. GESTIONE SFONDO - TECNICA DOUBLE-BUFFER                                   |
+| B. GESTIONE SFONDO - TECNICA DOUBLE-BUFFER (FIXED)                          |
 *******************************************************************************/
 const applicaSfondoDinamico = () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
     
-    if (typeof impostazioniApp === 'undefined') {
-        setTimeout(applicaSfondoDinamico, 100);
+    // Se il database non è ancora stato iniettato dal loader, attendi
+    if (typeof impostazioniApp === 'undefined' || !bgContainer) {
+        setTimeout(applicaSfondoDinamico, 50);
         return;
     }
 
-    if (bgContainer && impostazioniApp.sfondoLink) {
+    if (impostazioniApp.sfondoLink) {
         const imgBuffer = new Image();
-        const urlFresco = impostazioniApp.sfondoLink + "?t=" + new Date().getTime();
+        // Usiamo APP_VERSION se disponibile, altrimenti timestamp
+        const v = typeof APP_VERSION !== 'undefined' ? APP_VERSION : new Date().getTime();
+        const urlFresco = impostazioniApp.sfondoLink + "?v=" + v;
         
         imgBuffer.onload = () => {
-            console.log("Immagine caricata in RAM, la visualizzo.");
             bgContainer.style.backgroundImage = `url('${urlFresco}')`;
-            bgContainer.style.opacity = "1"; // Fa apparire lo sfondo con dissolvenza
+            bgContainer.style.opacity = "1"; 
+            console.log("Sfondo applicato correttamente.");
         };
 
         imgBuffer.onerror = () => {
-            console.error("Link immagine non valido o lento.");
-            bgContainer.style.opacity = "1"; // Mostra almeno il colore grigio
+            console.error("Impossibile caricare l'immagine di sfondo.");
+            bgContainer.style.backgroundColor = "#1a1a1a"; // Fallback colore
+            bgContainer.style.opacity = "1";
         };
 
         imgBuffer.src = urlFresco;
@@ -39,10 +44,12 @@ const applicaSfondoDinamico = () => {
 };
 
 /******************************************************************************
-| C. GENERAZIONE CATALOGO                                                      |
+| C. GENERAZIONE CATALOGO                                                     |
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
+    
+    // Protezione contro caricamenti multipli o mancanti
     if (!grid || typeof catalogoProdotti === 'undefined') return;
     
     grid.innerHTML = ""; 
@@ -50,78 +57,87 @@ const inizializzaCatalogo = () => {
     catalogoProdotti.forEach((p, index) => {
         const card = document.createElement('div');
         card.className = 'product-card';
-        card.style.backgroundColor = "#222"; 
-
+        
+        // Lo stile base della card lo lasciamo al CSS per pulizia
         const imgOggetto = new Image();
+        const v = typeof APP_VERSION !== 'undefined' ? APP_VERSION : new Date().getTime();
+        
         imgOggetto.onload = () => {
             imgOggetto.className = "product-banner-img";
             card.appendChild(imgOggetto);
             
+            // Animazione d'entrata fluida
             setTimeout(() => {
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, index * 100);
+            }, index * 80);
         };
 
         imgOggetto.onerror = () => {
-            card.innerHTML = `<div style="color:white; font-size:10px; padding:20px;">IMG Error</div>`;
+            card.innerHTML = `<div style="color:#555; font-size:10px; padding:20px;">Immagine non disponibile</div>`;
         };
 
-        // Cache busting per le immagini prodotto
-        imgOggetto.src = p.img + "?t=" + new Date().getTime();
+        imgOggetto.src = p.img + "?v=" + v;
         
-        card.addEventListener('click', () => {
-            if(typeof openSheet === 'function') openSheet(p);
-        });
+        card.onclick = () => {
+            if (typeof openSheet === 'function') openSheet(p);
+        };
         
         grid.appendChild(card);
     });
 };
 
 /******************************************************************************
-| D. AVVIO E EVENT LISTENERS                                                   |
+| D. AVVIO E GESTIONE EVENTI                                                  |
 *******************************************************************************/
-document.addEventListener('DOMContentLoaded', () => {
+// Usiamo una funzione di init chiamata direttamente o via DOMContentLoaded
+const initAppLogic = () => {
     const tg = window.Telegram.WebApp;
     tg.ready();
-    tg.expand();
-
-    // Avvia lo sfondo
+    
+    // 1. Applica lo sfondo
     applicaSfondoDinamico();
 
-    // Animazione banner
+    // 2. Anima i banner statici presenti nell'HTML
     const staticBanners = document.querySelectorAll('.banner-hidden:not(.product-card)');
     staticBanners.forEach((b, i) => {
         setTimeout(() => b.classList.add('banner-visible'), i * 150);
     });
 
-    const avviaQuandoPronto = () => {
+    // 3. Avvia il catalogo non appena i dati sono pronti
+    const checkData = setInterval(() => {
         if (typeof catalogoProdotti !== 'undefined') {
             inizializzaCatalogo();
-        } else {
-            setTimeout(avviaQuandoPronto, 100);
+            clearInterval(checkData);
         }
-    };
+    }, 100);
+};
 
-    avviaQuandoPronto();
-});
+// Se lo script è caricato asincronamente, verifichiamo lo stato del documento
+if (document.readyState === "loading") {
+    document.addEventListener('DOMContentLoaded', initAppLogic);
+} else {
+    initAppLogic();
+}
 
 /******************************************************************************
-| E. NAVIGAZIONE SEZIONI                                                       |
+| E. NAVIGAZIONE SEZIONI (SMART)                                               |
 *******************************************************************************/
 function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(s => s.style.display = 'none');
+    
     const activeSection = document.getElementById(sectionId);
-    if(!activeSection) return;
+    if (!activeSection) return;
 
     activeSection.style.display = 'block';
 
-    setTimeout(() => {
-        const banners = activeSection.querySelectorAll('.banner-hidden');
-        banners.forEach((banner, index) => {
-            setTimeout(() => {
-                banner.classList.add('banner-visible');
-            }, index * 100); 
-        });
-    }, 50);
+    // Riavvia animazioni banner nella sezione
+    const banners = activeSection.querySelectorAll('.banner-hidden');
+    banners.forEach((banner, index) => {
+        banner.classList.remove('banner-visible');
+        setTimeout(() => {
+            banner.classList.add('banner-visible');
+        }, index * 100); 
+    });
 }
