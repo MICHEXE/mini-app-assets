@@ -11,33 +11,55 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
 const appContainer = document.getElementById('app');
 
 /******************************************************************************
-| B. GESTIONE SFONDO DAL DATABASE (CON FIX CACHE)                              |
+| B. GESTIONE SFONDO CON PRE-CARICAMENTO ASINCRONO (SOLUZIONE PRO)             |
 *******************************************************************************/
-const applicaSfondoDinamico = () => {
+
+// Funzione "Promessa" che scarica l'immagine prima di usarla
+function precaricaImmagine(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        // Aggiungiamo il timestamp per saltare la cache del server
+        const urlFresco = url + "?t=" + new Date().getTime();
+        img.src = urlFresco;
+        img.onload = () => resolve(urlFresco);
+        img.onerror = () => reject(new Error("Errore caricamento: " + url));
+    });
+}
+
+const applicaSfondoDinamico = async () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
     
-    // Se non trova il database, aspetta 100ms e riprova
+    // Attesa che il database sia caricato
     if (typeof impostazioniApp === 'undefined') {
         setTimeout(applicaSfondoDinamico, 100);
         return;
     }
 
     if (bgContainer && impostazioniApp.sfondoLink) {
-        // AGGIUNTO: timestamp per forzare il caricamento immediato dell'immagine sfondo
-        const timestamp = new Date().getTime();
-        const urlFresco = impostazioniApp.sfondoLink + "?v=" + timestamp;
-        
-        console.log("Sfondo caricato con successo:", urlFresco);
-        bgContainer.style.backgroundImage = `url('${urlFresco}')`;
-        
-        // Forza la visibilità
-        bgContainer.style.opacity = "1";
-        bgContainer.style.display = "block";
+        try {
+            console.log("Inizio pre-caricamento sfondo...");
+            // SCACCO MATTO: Aspettiamo che il telefono scarichi davvero il file
+            const urlPronto = await precaricaImmagine(impostazioniApp.sfondoLink);
+            
+            bgContainer.style.backgroundImage = `url('${urlPronto}')`;
+            bgContainer.style.display = "block";
+            
+            // Appariamo gradualmente per un effetto premium
+            setTimeout(() => {
+                bgContainer.style.opacity = "1";
+            }, 50);
+            
+            console.log("Sfondo visualizzato con successo.");
+        } catch (error) {
+            console.error("Fallimento sfondo:", error);
+            // Se fallisce, almeno mettiamo un colore di sicurezza
+            bgContainer.style.backgroundColor = "#1a1a1a";
+        }
     }
 };
 
 /******************************************************************************
-| C. GENERAZIONE CATALOGO (CON FIX ORDINE E CACHE)                             |
+| C. GENERAZIONE CATALOGO (CON TIMESTAMP)                                      |
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
@@ -65,8 +87,7 @@ const inizializzaCatalogo = () => {
             card.innerHTML = `<div style="color:white; font-size:10px; padding:20px;">IMG Error</div>`;
         };
 
-        // AGGIUNTO: timestamp per forzare il caricamento delle immagini prodotto
-        // Questo risolve il problema delle Jeep o di altre foto che "non partivano"
+        // Timestamp anche qui per l'ordine e le foto sempre fresche
         imgOggetto.src = p.img + "?t=" + new Date().getTime();
         
         card.addEventListener('click', () => {
@@ -85,18 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
     tg.ready();
     tg.expand();
 
-    // 1. Applica lo sfondo dal DB appena il DOM è pronto
+    // Avvio asincrono dello sfondo
     applicaSfondoDinamico();
 
-    // 2. Animazione banner statici
+    // Animazione banner statici
     const staticBanners = document.querySelectorAll('.banner-hidden:not(.product-card)');
     staticBanners.forEach((b, i) => {
         setTimeout(() => b.classList.add('banner-visible'), i * 150);
     });
 
     const avviaQuandoPronto = () => {
-        // Se hai aggiornato il database.js su GitHub, assicurati che 
-        // l'URL nell'HTML abbia un ?v= nuovo (es: ?v=3.1)
         if (typeof catalogoProdotti !== 'undefined') {
             inizializzaCatalogo();
         } else {
