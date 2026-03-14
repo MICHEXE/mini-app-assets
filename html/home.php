@@ -13,7 +13,6 @@
 </head>
 
 <body>
-</video>
 
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
