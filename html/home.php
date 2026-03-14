@@ -7,28 +7,10 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=2.4">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css?v=2.5">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css?v=2.2">\
 
-    <style>
-        /* TEST IMMAGINE DI SFONDO DIRETTA */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            /* Usiamo lo sfondo.jpg che hai nella cartella img */
-            background-image: url("https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets@main/img/sfondo.jpg") !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
-            background-repeat: no-repeat !important;
-        }
-
-        #app {
-            background: transparent !important;
-        }
-    </style>
+    
 
 </head>
 
