@@ -89,7 +89,7 @@ html, body {
     position: fixed;             
     
     /* Configurazione Immagine Sfondo */
-    background-image: url("https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg") !important;
+    background-image: url("https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg?v=1") !important;
     background-size: cover !important;
     background-position: center !important;
     background-attachment: fixed !important;
