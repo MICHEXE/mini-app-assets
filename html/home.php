@@ -36,16 +36,14 @@
         // Caricamento SEQUENZIALE professionale
         async function inizializzaApp() {
             try {
-                // 1. Carica gli stili
                 await caricaAsset('css', 'https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/style.css');
                 await caricaAsset('css', 'https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/css/interattivo.css');
-                
-                // 2. Carica i dati (Il Database deve venire prima della logica)
                 await caricaAsset('js', 'https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/database.js');
-                
-                // 3. Carica la logica dell'app
                 await caricaAsset('js', 'https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/scripts.js');
                 await caricaAsset('js', 'https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/js/sheet.js');
+                
+                // --- AGGIUNTA: Forza la visibilità appena finito il caricamento ---
+                document.getElementById('app').style.opacity = "1";
                 
                 console.log("Sistema caricato con Versione: " + APP_VERSION);
             } catch (e) {

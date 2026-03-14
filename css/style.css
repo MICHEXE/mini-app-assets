@@ -84,40 +84,58 @@ a, a:visited, a:hover, a:active {
 |           RESET, TRASPARENZA E SFONDO DINAMICO (VERSIONE FIX)               |
 *******************************************************************************/
 /* RESET E BASE */
+/******************************************************************************
+|           RESET, TRASPARENZA E SFONDO DINAMICO (VERSIONE FIX)               |
+*******************************************************************************/
 html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    background-color: #1a1a1a; /* Colore di sicurezza */
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+    overflow-x: hidden; /* Evita scorrimenti laterali fastidiosi */
+    overflow-y: auto;
+    background-color: #1a1a1a !important; 
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* LO SFONDO (Ex .sfondo-fisso ora ID) */
 #sfondo-dinamico {
     position: fixed !important;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1; /* Dietro a tutto */
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: -1;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     filter: brightness(0.6) contrast(1.1);
-    opacity: 0; /* Gestito dal JS per il fade-in */
-    transition: opacity 0.8s ease;
+    opacity: 0; 
+    transition: opacity 0.8s ease-in-out;
+    pointer-events: none; /* Impedisce allo sfondo di intercettare i click */
 }
 
-/* IL CONTENITORE DELL'APP */
 #app {
     position: relative;
-    z-index: 1; /* Sopra lo sfondo */
+    z-index: 1;
     width: 100%;
-    height: 100vh;
-    overflow-y: auto;
-    background: transparent !important; /* TRASPARENTE OBBLIGATORIO */
-    -webkit-overflow-scrolling: touch;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: transparent !important;
+    padding-bottom: 80px; /* Spazio per il bottom menu */
+}
+
+/* STATI DI ANIMAZIONE PER I BANNER */
+.banner-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.banner-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 /******************************************************************************
