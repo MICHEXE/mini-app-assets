@@ -11,7 +11,7 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
 const appContainer = document.getElementById('app');
 
 /******************************************************************************
-| B. GESTIONE SFONDO DAL DATABASE                                              |
+| B. GESTIONE SFONDO DAL DATABASE (CON FIX CACHE)                              |
 *******************************************************************************/
 const applicaSfondoDinamico = () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
@@ -23,16 +23,21 @@ const applicaSfondoDinamico = () => {
     }
 
     if (bgContainer && impostazioniApp.sfondoLink) {
-        console.log("Sfondo caricato con successo:", impostazioniApp.sfondoLink);
-        bgContainer.style.backgroundImage = `url('${impostazioniApp.sfondoLink}')`;
-        // Forza la visibilità nel caso il CSS avesse problemi
+        // AGGIUNTO: timestamp per forzare il caricamento immediato dell'immagine sfondo
+        const timestamp = new Date().getTime();
+        const urlFresco = impostazioniApp.sfondoLink + "?v=" + timestamp;
+        
+        console.log("Sfondo caricato con successo:", urlFresco);
+        bgContainer.style.backgroundImage = `url('${urlFresco}')`;
+        
+        // Forza la visibilità
         bgContainer.style.opacity = "1";
         bgContainer.style.display = "block";
     }
 };
 
 /******************************************************************************
-| C. GENERAZIONE CATALOGO                                                      |
+| C. GENERAZIONE CATALOGO (CON FIX ORDINE E CACHE)                             |
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
@@ -60,7 +65,9 @@ const inizializzaCatalogo = () => {
             card.innerHTML = `<div style="color:white; font-size:10px; padding:20px;">IMG Error</div>`;
         };
 
-        imgOggetto.src = p.img + "?v=" + new Date().getTime();
+        // AGGIUNTO: timestamp per forzare il caricamento delle immagini prodotto
+        // Questo risolve il problema delle Jeep o di altre foto che "non partivano"
+        imgOggetto.src = p.img + "?t=" + new Date().getTime();
         
         card.addEventListener('click', () => {
             if(typeof openSheet === 'function') openSheet(p);
@@ -88,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const avviaQuandoPronto = () => {
+        // Se hai aggiornato il database.js su GitHub, assicurati che 
+        // l'URL nell'HTML abbia un ?v= nuovo (es: ?v=3.1)
         if (typeof catalogoProdotti !== 'undefined') {
             inizializzaCatalogo();
         } else {
