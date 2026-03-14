@@ -8,8 +8,21 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
     return false;
 };
 
-// Selezioniamo il contenitore principale per eventuali operazioni future
 const appContainer = document.getElementById('app');
+
+/******************************************************************************
+| B. GESTIONE SFONDO DAL DATABASE                                              |
+*******************************************************************************/
+const applicaSfondoDinamico = () => {
+    const bgContainer = document.getElementById('sfondo-dinamico');
+    
+    // Controlla se esiste l'elemento e se nel database.js hai definito impostazioniApp
+    if (bgContainer && typeof impostazioniApp !== 'undefined' && impostazioniApp.sfondoLink) {
+        bgContainer.style.backgroundImage = `url('${impostazioniApp.sfondoLink}')`;
+    } else {
+        console.log("Sfondo non trovato nel database o elemento mancante");
+    }
+};
 
 /******************************************************************************
 | C. GENERAZIONE CATALOGO                                                      |
@@ -30,7 +43,6 @@ const inizializzaCatalogo = () => {
             imgOggetto.className = "product-banner-img";
             card.appendChild(imgOggetto);
             
-            // Animazione a cascata
             setTimeout(() => {
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
@@ -41,7 +53,6 @@ const inizializzaCatalogo = () => {
             card.innerHTML = `<div style="color:white; font-size:10px; padding:20px;">IMG Error</div>`;
         };
 
-        // Cache busting per ricaricare le immagini correttamente
         imgOggetto.src = p.img + "?v=" + new Date().getTime();
         
         card.addEventListener('click', () => {
@@ -60,7 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
     tg.ready();
     tg.expand();
 
-    // Animazione per i banner statici presenti all'avvio
+    // 1. Applica lo sfondo dal DB appena il DOM è pronto
+    applicaSfondoDinamico();
+
+    // 2. Animazione banner statici
     const staticBanners = document.querySelectorAll('.banner-hidden:not(.product-card)');
     staticBanners.forEach((b, i) => {
         setTimeout(() => b.classList.add('banner-visible'), i * 150);
@@ -70,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof catalogoProdotti !== 'undefined') {
             inizializzaCatalogo();
         } else {
-            // Riprova finché il database.js non è caricato
             setTimeout(avviaQuandoPronto, 100);
         }
     };

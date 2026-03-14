@@ -1,6 +1,10 @@
 const LINK_SIGNAL = "https://signal.me/#p/+39123456789";
 const LINK_TELEGRAM = "https://t.me/donmichhh";
 
+const impostazioniApp = {
+    sfondoMain: "https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg?v=1.5"
+};
+
 const catalogoProdotti = [
     { 
         id: 1, 

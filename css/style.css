@@ -79,26 +79,31 @@ a, a:visited, a:hover, a:active {
 
 
 /* RESET E TRASPARENZA */
-/* ELIMINA IL VECCHIO html, body E METTI QUESTO */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100vh;
     overflow: hidden !important; 
-    position: fixed;             
-    
-    /* Configurazione Immagine Sfondo */
-    background-image: url("https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg?v=1") !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-attachment: fixed !important;
-    background-repeat: no-repeat !important;
+    position: fixed;
+    background-color: #000; /* Nero di base finché non carica la foto */
 }
 
-
-body.no-scroll {
-    overflow: hidden !important;
+/* CLASSE PER LO STILE (Senza il link url) */
+.sfondo-main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; 
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    
+    /* Qui gestisci la luminosità e i colori */
+    filter: brightness(0.6) contrast(1.1); 
+    pointer-events: none;
 }
 
 #app {
@@ -109,12 +114,8 @@ body.no-scroll {
     padding: 125px 20px 120px 20px;
     position: relative;
     z-index: 1;
-    background: transparent !important; /* Deve essere trasparente */
+    background: transparent !important;
 }
-/* Rimuovi la maschera da #app.home-page e usa questo: */
-
-/* Rimuovi la maschera da #app.home-page e usa questo: */
-
 /* IL VIDEO BACKGROUND (FIXED) */
 
 
