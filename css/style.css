@@ -78,43 +78,48 @@ a, a:visited, a:hover, a:active {
 }
 
 
-/* RESET E TRASPARENZA */
+/******************************************************************************
+|           RESET, TRASPARENZA E SFONDO DINAMICO (FIXED)                      |
+*******************************************************************************/
+
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100vh;
-    overflow: hidden !important; 
-    position: fixed;
-    background-color: #000; /* Nero di base finché non carica la foto */
+    overflow: hidden !important; /* Blocca lo scroll del body */
+    position: fixed;             /* Evita sbalzi su mobile */
+    background-color: #000;      /* Colore di base mentre carica l'immagine */
 }
 
-/* CLASSE PER LO STILE (Senza il link url) */
+/* Questa classe riceve l'immagine dal Database JS */
 .sfondo-main {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1; 
+    z-index: -1;                /* Fondamentale: sta DIETRO a tutto */
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     
-    /* Qui gestisci la luminosità e i colori */
-    filter: brightness(0.6) contrast(1.1); 
-    pointer-events: none;
+    /* GESTIONE VISIVA: Qui puoi regolare quanto deve essere scura l'immagine */
+    filter: brightness(0.5) contrast(1.1); 
+    
+    pointer-events: none;       /* Non intercettare i tocchi dell'utente */
+    transition: opacity 0.8s ease-in-out; /* Comparsa fluida al caricamento */
 }
 
 #app {
     display: block;
     height: 100vh;
-    overflow-y: auto !important;
+    overflow-y: auto !important; /* Permette lo scroll solo qui dentro */
     -webkit-overflow-scrolling: touch;
-    padding: 125px 20px 120px 20px;
+    padding: 125px 20px 120px 20px; /* Spazio per menu e banner fissi */
     position: relative;
-    z-index: 1;
-    background: transparent !important;
+    z-index: 1;                 /* Sta SOPRA lo sfondo */
+    background: transparent !important; /* DEVE essere trasparente per vedere la foto */
 }
 /* IL VIDEO BACKGROUND (FIXED) */
 

@@ -13,7 +13,7 @@
 </head>
 
 <body>
-<div id="sfondo-dinamico" class="sfondo-main" style="background-color: red !important;"></div>
+<div id="sfondo-dinamico" class="sfondo-main"></div>
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
             <div class="banner-titolo">
