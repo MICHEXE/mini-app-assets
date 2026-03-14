@@ -44,32 +44,48 @@ const applicaSfondoDinamico = () => {
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
+    
+    // 1. Controllo sicurezza
     if (!grid || typeof catalogoProdotti === 'undefined') return;
     
+    // 2. Pulizia griglia
     grid.innerHTML = ""; 
 
     catalogoProdotti.forEach((p, index) => {
+        // Creiamo la card
         const card = document.createElement('div');
-        card.className = 'product-card';
+        card.className = 'product-card banner-hidden'; // Parte nascosta
         
+        // Creiamo l'immagine
         const imgOggetto = new Image();
         const v = typeof APP_VERSION !== 'undefined' ? APP_VERSION : new Date().getTime();
         
         imgOggetto.onload = () => {
             imgOggetto.className = "product-banner-img";
             card.appendChild(imgOggetto);
+            
+            // Mostriamo la card con un delay progressivo (effetto cascata)
             setTimeout(() => {
+                card.classList.add('banner-visible');
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, index * 80);
+            }, index * 100); 
         };
 
         imgOggetto.onerror = () => {
-            card.innerHTML = `<div style="color:#555; font-size:10px; padding:20px;">No Image</div>`;
+            console.error("Errore caricamento immagine per:", p.nome);
+            card.innerHTML = `<div style="color:#666; font-size:10px; padding:20px;">Non disponibile</div>`;
+            card.classList.add('banner-visible'); // La mostriamo comunque per non rompere la griglia
         };
 
+        // Assegniamo l'URL (questo avvia il download)
         imgOggetto.src = p.img + "?v=" + v;
-        card.onclick = () => { if (typeof openSheet === 'function') openSheet(p); };
+        
+        // Click per aprire il foglio prodotto
+        card.onclick = () => {
+            if (typeof openSheet === 'function') openSheet(p);
+        };
+        
         grid.appendChild(card);
     });
 };
