@@ -9,7 +9,7 @@
     
     <script>
         // Versione globale per il controllo della cache
-        const APP_VERSION = "4.8"; 
+        const APP_VERSION = "4.9"; 
 
         /**
          * Carica dinamicamente script e stili con cache busting
