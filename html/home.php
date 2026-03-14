@@ -74,19 +74,24 @@
     
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tg = window.Telegram.WebApp;
-            tg.expand(); // Espande la mini app al massimo
-            const user = tg.initDataUnsafe?.user;
-            document.getElementById('user-name').innerText = user ? user.first_name : "Ospite";
-            
-            // Avvia la funzione che crea la griglia (che sta in scripts.js)
-            if (typeof inizializzaCatalogo === 'function') {
-                inizializzaCatalogo();
-            }
-        });
-
+    document.addEventListener('DOMContentLoaded', () => {
+        const tg = window.Telegram.WebApp;
+        tg.ready(); // Importante aggiungere ready()
+        tg.expand(); 
         
-    </script>
+        const user = tg.initDataUnsafe?.user;
+        document.getElementById('user-name').innerText = user ? user.first_name : "Ospite";
+        
+        // 1. ATTIVA LO SFONDO DINAMICO (Prende il link dal database)
+        if (typeof applicaSfondoDinamico === 'function') {
+            applicaSfondoDinamico();
+        }
+
+        // 2. AVVIA IL CATALOGO
+        if (typeof inizializzaCatalogo === 'function') {
+            inizializzaCatalogo();
+        }
+    });
+</script>
 </body>
 </html>
