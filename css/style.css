@@ -83,39 +83,28 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    /* Rimuoviamo min-height: 100vh e mettiamo questo per allungare la pagina */
-    min-height: 100%; 
-    height: auto !important; 
-    overflow-x: hidden;
-    background: transparent !important;
-    /* Evita il rimbalzo bianco su iPhone e lo scatto del video */
-    overscroll-behavior-y: none; 
-    -webkit-overflow-scrolling: touch;
-
-    overflow: hidden; /* Blocca lo scroll del body principale */
-    height: 100%;
-    position: fixed; /* Impedisce al browser di spostare la viewport */
-    overscroll-behavior: none; /* Toglie l'effetto elastico */
+    height: 100vh;
+    overflow: hidden !important; /* Blocca lo scroll del browser */
+    position: fixed;             /* Impedisce il trascinamento della barra */
+    background: #000;
 }
 
 
 
 body.no-scroll {
     overflow: hidden !important;
-    height: 100vh !important;
-    position: fixed; /* Forza il blocco su iOS */
-    width: 100%;
 }
 
 #app {
-    height: 100vh; /* Altezza fissa pari allo schermo */
-    overflow-y: auto; /* Permette lo scroll solo qui dentro */
-    -webkit-overflow-scrolling: touch; /* Rende lo scroll fluido su iPhone */
+    display: block;
+    height: 100vh;               /* L'app occupa tutto lo schermo */
+    overflow-y: auto !important; /* Lo scroll avviene solo qui dentro */
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; /* Scroll fluido su iPhone */
     padding: 125px 20px 120px 20px;
     position: relative;
     z-index: 1;
 }
-
 /* Rimuovi la maschera da #app.home-page e usa questo: */
 
 /* Rimuovi la maschera da #app.home-page e usa questo: */
