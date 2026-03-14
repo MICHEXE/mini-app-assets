@@ -20,7 +20,7 @@
             <div class="banner-titolo">
                 <div class="header-left">
                     <img src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/svg/ciao.svg" class="icon-ciao" alt="ciao">
-                    <span>Benvenutoo</span>
+                    <span>BenvenutooO</span>
                 </div>
                 <img src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/svg/shuriken.svg" class="icon-shuriken" alt="shuriken">
             </div>
