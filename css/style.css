@@ -91,6 +91,11 @@ html, body {
     /* Evita il rimbalzo bianco su iPhone e lo scatto del video */
     overscroll-behavior-y: none; 
     -webkit-overflow-scrolling: touch;
+
+    overflow: hidden; /* Blocca lo scroll del body principale */
+    height: 100%;
+    position: fixed; /* Impedisce al browser di spostare la viewport */
+    overscroll-behavior: none; /* Toglie l'effetto elastico */
 }
 
 
@@ -105,7 +110,7 @@ body.no-scroll {
 #app {
     display: block;
     /* Aumenta questo valore per rendere la pagina più lunga e scorrevole */
-    min-height: 350vh; 
+    min-height: 180vh; 
     padding: 125px 20px 150px 20px; 
     position: relative;
     z-index: 1;
