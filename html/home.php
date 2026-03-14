@@ -13,10 +13,16 @@
 </head>
 
 <body>
-    <video id="v0" preload="auto" muted playsinline webkit-playsinline autoplay loop 
-           style="position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover;">
-        <source src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/camper-scroll.mp4" type="video/mp4">
-    </video>
+    <video id="v0" 
+       autoplay 
+       muted 
+       loop 
+       playsinline 
+       webkit-playsinline 
+       preload="auto"
+       style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; object-fit: cover; pointer-events: none;">
+    <source src="https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/camper-scroll.mp4" type="video/mp4">
+</video>
 
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
