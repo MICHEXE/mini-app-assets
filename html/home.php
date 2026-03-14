@@ -13,9 +13,25 @@
 </head>
 
 <body>
-<div id="sfondo-dinamico" class="sfondo-main" 
-     style="background-image: url('https://cdn.jsdelivr.net/gh/MICHEXE/mini-app-assets/img/sfondo.jpg?v=999'); opacity: 1 !important;">
-</div>
+<style>
+  /* STILE DI EMERGENZA INTEGRATO */
+  .sfondo-fisso {
+    position: fixed !important;
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh;
+    z-index: -1 !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-color: #1a1a1a !important; /* Grigio se la foto fallisce */
+    filter: brightness(0.5) contrast(1.1);
+    opacity: 0; /* Parte invisibile per evitare il flash nero */
+    transition: opacity 0.8s ease;
+    display: block !important;
+  }
+</style>
+
+<div id="sfondo-dinamico" class="sfondo-fisso"></div>
     <div id="app">
         <div id="banner-home-1" class="banner-hidden">
             <div class="banner-titolo">
@@ -81,30 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
     tg.ready();
     tg.expand(); 
 
-    // FORZA LO SFONDO DIRETTAMENTE QUI (Test rapido)
-    const forzaSfondo = () => {
-        const bg = document.getElementById('sfondo-dinamico');
-        // Usiamo un controllo per vedere se il database è arrivato
-        if (typeof impostazioniApp !== 'undefined' && impostazioniApp.sfondoLink) {
-            const urlfresco = impostazioniApp.sfondoLink + "?t=" + new Date().getTime();
-            bg.style.backgroundImage = "url('" + urlfresco + "')";
-            bg.style.opacity = "1";
-            console.log("Sfondo forzato dall'HTML!");
-        } else {
-            // Se il database non è ancora pronto, riprova tra poco
-            setTimeout(forzaSfondo, 100);
-        }
-    };
-    
-    forzaSfondo();
-
+    // Recupera il nome utente
     const user = tg.initDataUnsafe?.user;
-    document.getElementById('user-name').innerText = user ? user.first_name : "Ospite";
-    
-    if (typeof inizializzaCatalogo === 'function') {
-        inizializzaCatalogo();
+    const nameElement = document.getElementById('user-name');
+    if (nameElement) {
+        nameElement.innerText = user ? user.first_name : "Ospite";
     }
+    
+    // NOTA: Lo sfondo e il catalogo vengono già avviati 
+    // automaticamente dal tuo file "scripts.js"
 });
+</script>
 </script>
 </body>
 </html>

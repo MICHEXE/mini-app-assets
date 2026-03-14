@@ -8,28 +8,9 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
     return false;
 };
 
-const appContainer = document.getElementById('app');
-
 /******************************************************************************
-| B. GESTIONE SFONDO CON PRE-CARICAMENTO ASINCRONO (SOLUZIONE PRO)             |
+| B. GESTIONE SFONDO - TECNICA DOUBLE-BUFFER                                   |
 *******************************************************************************/
-
-// Funzione "Promessa" che scarica l'immagine prima di usarla
-function precaricaImmagine(url) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        // Aggiungiamo il timestamp per saltare la cache del server
-        const urlFresco = url + "?t=" + new Date().getTime();
-        img.src = urlFresco;
-        img.onload = () => resolve(urlFresco);
-        img.onerror = () => reject(new Error("Errore caricamento: " + url));
-    });
-}
-
-/******************************************************************************
-| B. GESTIONE SFONDO - TECNICA DOUBLE-BUFFER (FIX DEFINITIVO)                 |
-*******************************************************************************/
-
 const applicaSfondoDinamico = () => {
     const bgContainer = document.getElementById('sfondo-dinamico');
     
@@ -39,27 +20,18 @@ const applicaSfondoDinamico = () => {
     }
 
     if (bgContainer && impostazioniApp.sfondoLink) {
-        // Creiamo un elemento immagine "fantasma" per forzare il download
         const imgBuffer = new Image();
         const urlFresco = impostazioniApp.sfondoLink + "?t=" + new Date().getTime();
         
         imgBuffer.onload = () => {
-            // L'immagine è ora fisicamente nella RAM del telefono
-            console.log("Buffer pronto, applico lo sfondo.");
-            
-            // Applichiamo l'immagine e forziamo il CSS
+            console.log("Immagine caricata in RAM, la visualizzo.");
             bgContainer.style.backgroundImage = `url('${urlFresco}')`;
-            
-            // Rimuoviamo eventuali filtri che potrebbero scurire troppo (test)
-            bgContainer.style.display = "block";
-            bgContainer.style.opacity = "1";
-            bgContainer.style.visibility = "visible";
+            bgContainer.style.opacity = "1"; // Fa apparire lo sfondo con dissolvenza
         };
 
         imgBuffer.onerror = () => {
-            console.error("Errore critico: il link non risponde.");
-            // Se fallisce, mettiamo un colore di emergenza per non lasciare nero
-            bgContainer.style.backgroundColor = "#2c3e50"; 
+            console.error("Link immagine non valido o lento.");
+            bgContainer.style.opacity = "1"; // Mostra almeno il colore grigio
         };
 
         imgBuffer.src = urlFresco;
@@ -67,7 +39,7 @@ const applicaSfondoDinamico = () => {
 };
 
 /******************************************************************************
-| C. GENERAZIONE CATALOGO (CON TIMESTAMP)                                      |
+| C. GENERAZIONE CATALOGO                                                      |
 *******************************************************************************/
 const inizializzaCatalogo = () => {
     const grid = document.getElementById('grid-prodotti');
@@ -95,7 +67,7 @@ const inizializzaCatalogo = () => {
             card.innerHTML = `<div style="color:white; font-size:10px; padding:20px;">IMG Error</div>`;
         };
 
-        // Timestamp anche qui per l'ordine e le foto sempre fresche
+        // Cache busting per le immagini prodotto
         imgOggetto.src = p.img + "?t=" + new Date().getTime();
         
         card.addEventListener('click', () => {
@@ -114,10 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
     tg.ready();
     tg.expand();
 
-    // Avvio asincrono dello sfondo
+    // Avvia lo sfondo
     applicaSfondoDinamico();
 
-    // Animazione banner statici
+    // Animazione banner
     const staticBanners = document.querySelectorAll('.banner-hidden:not(.product-card)');
     staticBanners.forEach((b, i) => {
         setTimeout(() => b.classList.add('banner-visible'), i * 150);

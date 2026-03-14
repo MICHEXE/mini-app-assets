@@ -30,7 +30,7 @@ a, a:visited, a:hover, a:active {
     --text-color-signal: #74a874;
 
     /* COLORI GLOBALI BANNER */
-    --main-color-bg-banner: #d6362084;
+    --main-color-bg-banner: #be3c2b84;
     --color-bg-banner-dark: #000000; /*  sheet*/
     --color-bg-banner-ciano: #2b4c4c; /* sheet*/
     --color-bg-bottom-menu: #3b3f3b;
@@ -91,33 +91,11 @@ html, body {
     height: 100vh;
     overflow: hidden !important;
     position: fixed;
-    /* Togliamo il nero assoluto per capire se il problema è l'immagine */
-    background-color: #1a1a1a; 
+    /* Usiamo un grigio molto scuro invece del nero pece */
+    background-color: #1a1a1a !important; 
 }
 
-.sfondo-main {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: -1 !important; /* Sempre dietro */
-    
-    /* Forza la visualizzazione */
-    display: block !important;
-    opacity: 1 !important;
 
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-
-    /* REGOLA IL VOLUME: Se vedi nero, prova a mettere brightness(1.0) 
-       per capire se l'immagine c'è, poi lo riabbassi */
-    filter: brightness(0.5) contrast(1.1); 
-    
-    pointer-events: none;
-    transition: background-image 0.5s ease-in-out;
-}
 
 #app {
     display: block;
@@ -126,13 +104,12 @@ html, body {
     -webkit-overflow-scrolling: touch;
     padding: 125px 20px 120px 20px;
     position: relative;
-    z-index: 1; /* Sopra lo sfondo */
+    z-index: 1; 
     
-    /* Fondamentale: deve essere trasparente */
+    /* TRASPARENZA TOTALE FORZATA */
     background: transparent !important; 
     background-color: rgba(0,0,0,0) !important;
 }
-
 /******************************************************************************
 |                                   BOTTOM MENU                               |
 *******************************************************************************/
