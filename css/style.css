@@ -108,10 +108,10 @@ body.no-scroll {
 }
 
 #app {
-    display: block;
-    /* Aumenta questo valore per rendere la pagina più lunga e scorrevole */
-    min-height: 180vh; 
-    padding: 125px 20px 150px 20px; 
+    height: 100vh; /* Altezza fissa pari allo schermo */
+    overflow-y: auto; /* Permette lo scroll solo qui dentro */
+    -webkit-overflow-scrolling: touch; /* Rende lo scroll fluido su iPhone */
+    padding: 125px 20px 120px 20px;
     position: relative;
     z-index: 1;
 }
